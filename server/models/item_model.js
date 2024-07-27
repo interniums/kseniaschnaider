@@ -12,7 +12,7 @@ const ItemSchema = new mongoose.Schema({
     unique: true,
   },
   img: {
-    type: String,
+    type: [String],
     required: true,
   },
   cost_uah: {
