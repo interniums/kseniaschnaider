@@ -5,7 +5,15 @@ import { Input } from './ui/input'
 import { useToast } from './ui/use-toast'
 import { Toaster } from './ui/toaster'
 
-export default function ColorPicker({ color, setColor, setColorInputs }) {
+export default function ColorPicker({
+  color,
+  setColor,
+  setColorInputs,
+  colorInputs,
+  item,
+  error,
+  setError,
+}) {
   const [colorName, setColorName] = useState('')
   const [colorRgb, setColorRgb] = useState('')
   const [success, setSuccess] = useState(false)
@@ -16,8 +24,8 @@ export default function ColorPicker({ color, setColor, setColorInputs }) {
   useEffect(() => {
     errorName || errorRGB
       ? toast({
-          title: 'Поле не має бути пустим',
-          description: 'Заповніть всі поля.',
+          title:
+            'Введіть кольір чи кольори виробу, а також виберіть колір в палітрі.',
           variant: 'destructive',
         })
       : null
@@ -32,23 +40,15 @@ export default function ColorPicker({ color, setColor, setColorInputs }) {
       setErrorRGB(true)
       return
     }
-    setColor((prev) => ({ ...prev, [colorName]: colorRgb }))
+    const newColor = color
+    newColor.push({ name: colorName, rgb: colorRgb })
+    setColor(newColor)
     setSuccess(true)
   }
 
   const handleDelete = () => {
-    // console.log(colorRgb)
-    // console.log(color)
-    // console.log(Object.values(color)[0])
-    for (let i = 0; i < color.length; i++) {
-      if (Object.values(color)[i] == colorRgb) {
-        const newColor = { ...color }
-        console.log(color)
-        delete newColor[i]
-        setColor((prev) => ({ newColor }))
-        // setColorInputs((prev) => ({ ...prev }))
-      }
-    }
+    setColor(color.filter((color) => color.name !== colorName))
+    setColorInputs(colorInputs.filter((number) => number !== item))
   }
 
   return (
@@ -56,7 +56,7 @@ export default function ColorPicker({ color, setColor, setColorInputs }) {
       <div className="flex gap-4">
         <div
           className="relative w-full rounded-md"
-          style={{ outline: errorName ? '2px solid red' : 'none' }}
+          style={{ outline: errorName || error ? '2px solid red' : 'none' }}
         >
           <Input
             disabled={success ? true : false}
@@ -65,7 +65,10 @@ export default function ColorPicker({ color, setColor, setColorInputs }) {
             onChange={(e) => {
               setColorName(e.target.value)
             }}
-            onFocus={() => setErrorName(false)}
+            onFocus={() => {
+              setErrorName(false)
+              setError((prev) => ({ ...prev, color: false }))
+            }}
           />
           <Input
             disabled={success ? true : false}

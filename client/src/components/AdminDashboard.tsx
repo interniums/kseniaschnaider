@@ -1,11 +1,11 @@
-import AdminForm from './AdminForm'
+import { Outlet } from 'react-router-dom'
 
-const AdminDashboard = () => {
+const AdminAddItem = () => {
   return (
-    <main className="abosulute inset-0 p-8 flex w-full h-screen justify-center items-center">
-      <AdminForm />
+    <main className="abosulute inset-0 py-12 px-40 flex w-full h-screen justify-center items-center">
+      <Outlet />
     </main>
   )
 }
 
-export default AdminDashboard
+export default AdminAddItem

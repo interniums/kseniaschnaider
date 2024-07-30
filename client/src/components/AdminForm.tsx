@@ -18,6 +18,9 @@ import SizePicker from './SizePicker'
 import ColorPicker from './ColorPicker'
 import FormInput from './FormInput'
 import { collections } from '@/lib/utils'
+import { Toaster } from './ui/toaster'
+import { useToast } from './ui/use-toast'
+import { SelectPortal, SelectViewport } from '@radix-ui/react-select'
 
 export default function AdminForm() {
   const [name, setName] = useState('')
@@ -27,7 +30,7 @@ export default function AdminForm() {
   const [collection, setCollection] = useState('')
   const [height, setHeight] = useState(false)
   const [gender, setGender] = useState('Унісекс')
-  const [color, setColor] = useState({})
+  const [color, setColor] = useState([])
   const [size, setSize] = useState({
     xxs: true,
     xs: true,
@@ -38,14 +41,76 @@ export default function AdminForm() {
     oneSize: false,
   })
   const [colorInputs, setColorInputs] = useState([0])
-  console.log(color)
+  const [error, setError] = useState({
+    name: false,
+    description: false,
+    material: false,
+    cost: false,
+    collection: false,
+    color: false,
+  })
+  const { toast } = useToast()
 
   const addColorInput = () => {
     setColorInputs([...colorInputs, colorInputs.length])
   }
 
+  console.log(color)
+
+  const validateForm = () => {
+    if (!name.length) return setError((prev) => ({ ...prev, name: true }))
+    if (!description.length)
+      return setError((prev) => ({ ...prev, description: true }))
+    if (!material.length)
+      return setError((prev) => ({ ...prev, material: true }))
+    if (cost == 0) return setError((prev) => ({ ...prev, cost: true }))
+    if (!collection.length)
+      return setError((prev) => ({ ...prev, collection: true }))
+    if (!Object(color).length)
+      return setError((prev) => ({ ...prev, color: true }))
+  }
+
+  useEffect(() => {
+    if (error.name) {
+      toast({
+        title: 'Введіть назву виробу.',
+        description: 'Заповніть всі поля.',
+        variant: 'destructive',
+      })
+    }
+    if (error.description) {
+      toast({
+        title: 'Додайте опис виробу.',
+        description: 'Заповніть всі поля.',
+        variant: 'destructive',
+      })
+    }
+    if (error.cost) {
+      toast({
+        title: 'Додайте ціну виробу.',
+        description: 'Заповніть всі поля.',
+        variant: 'destructive',
+      })
+    }
+    if (error.material) {
+      toast({
+        title: 'Опишіть матеріал виробу.',
+        description: 'Заповніть всі поля.',
+        variant: 'destructive',
+      })
+    }
+    if (error.collection) {
+      toast({
+        title: 'Визначте колецію виробу.',
+        description: 'Заповніть всі поля.',
+        variant: 'destructive',
+      })
+    }
+  }, [error])
+
   return (
-    <div className="w-full rounded-md border max shadow-md py-12 px-8">
+    <div className="w-full rounded-md border max shadow-md py-8 px-8">
+      <Toaster />
       <h1 className="text-xl font-bold mb-6">
         Заповніть поля, щоб створити нову позицію.
       </h1>
@@ -61,6 +126,8 @@ export default function AdminForm() {
               label={'Назва позиції.'}
               id={'name'}
               type={'text'}
+              error={error}
+              setError={setError}
             />
           </div>
           <div className="w-full grid gap-4">
@@ -71,8 +138,14 @@ export default function AdminForm() {
               required
               id="description"
               className="resize-none"
-              placeholder="опишіть позциію"
+              placeholder={
+                error.description ? 'заповніть поле' : 'опишіть позциію'
+              }
               onChange={(e) => setDescription(e.target.value)}
+              style={{ outline: error.description ? '2px solid red' : 'none' }}
+              onInput={() => {
+                setError((prev) => ({ ...prev, description: false }))
+              }}
             />
           </div>
           <div className="w-full grid gap-4">
@@ -82,6 +155,8 @@ export default function AdminForm() {
               label={'Матеріал виробу.'}
               id={'material'}
               type={'text'}
+              error={error}
+              setError={setError}
             />
           </div>
           <div className="w-full grid gap-4">
@@ -91,6 +166,8 @@ export default function AdminForm() {
               label={'Ціна в гривнях.'}
               id={'cost'}
               type={'number'}
+              error={error}
+              setError={setError}
             />
           </div>
           <div className="w-full grid gap-4">
@@ -98,22 +175,26 @@ export default function AdminForm() {
               Виберіть колецію.
             </Label>
             <div id="collection">
-              <Select required>
-                <SelectTrigger>
-                  <SelectValue placeholder="виберіть колецію" />
-                </SelectTrigger>
-                <SelectContent>
-                  {collections.map((item, i) => (
-                    <SelectItem
-                      onSelect={(e) => setCollection(e.target.value)}
-                      key={i}
-                      value={item}
-                    >
-                      {item}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div
+                className="rounded-md"
+                style={{ outline: error.collection ? '2px solid red' : 'none' }}
+                onFocus={() =>
+                  setError((prev) => ({ ...prev, collection: false }))
+                }
+              >
+                <Select onValueChange={setCollection}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="виберіть колецію" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {collections.map((item, i) => (
+                      <SelectItem key={i} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
               <div>
                 <p className="text-xs mt-4 ml-2 text-slate-800 underline cursor-pointer">
                   Додати колецію?
@@ -200,7 +281,11 @@ export default function AdminForm() {
                   key={item}
                   color={color}
                   setColor={setColor}
+                  colorInputs={colorInputs}
                   setColorInputs={setColorInputs}
+                  item={item}
+                  error={error.color}
+                  setError={setError}
                 />
               ))}
             </div>
@@ -214,6 +299,15 @@ export default function AdminForm() {
           </div>
         </div>
       </form>
+      <div className="w-full flex items-center justify-end mt-12">
+        <Button
+          type="button"
+          className="bg-slate-200 text-black py-6 px-8 text-xl hover:bg-slate-300"
+          onClick={validateForm}
+        >
+          Submit
+        </Button>
+      </div>
     </div>
   )
 }

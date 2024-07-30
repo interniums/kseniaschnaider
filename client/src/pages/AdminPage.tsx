@@ -1,7 +1,5 @@
-import AdminDashboard from '../components/AdminDashboard'
-
 const AdminPage = () => {
-  return <AdminDashboard />
+  return <div>THIS IS ADMIN PAGE</div>
 }
 
 export default AdminPage
