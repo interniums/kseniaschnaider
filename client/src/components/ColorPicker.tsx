@@ -62,6 +62,7 @@ export default function ColorPicker({
             disabled={success ? true : false}
             type="text"
             id="color"
+            placeholder="назва кольору"
             onChange={(e) => {
               setColorName(e.target.value)
             }}

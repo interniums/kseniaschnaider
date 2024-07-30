@@ -1,5 +1,7 @@
+import { Outlet } from 'react-router-dom'
+
 const AdminPage = () => {
-  return <div>THIS IS ADMIN PAGE</div>
+  return <Outlet />
 }
 
 export default AdminPage

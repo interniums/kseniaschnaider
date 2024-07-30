@@ -9,6 +9,7 @@ const CollectionSchema = new mongoose.Schema({
   items: {
     type: [mongoose.Schema.Types.ObjectId],
     default: [],
+    required: false,
   },
 })
 

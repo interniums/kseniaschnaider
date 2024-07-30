@@ -4,6 +4,7 @@ const ItemSchema = new mongoose.Schema({
   new: {
     type: Boolean,
     default: true,
+    required: false,
   },
   name: {
     type: String,
@@ -12,22 +13,22 @@ const ItemSchema = new mongoose.Schema({
     unique: true,
   },
   img: {
+    type: [String],
     required: true,
   },
   cost_uah: {
     type: Number,
-    minLength: 1,
-    default: 99,
+    required: true,
   },
   cost_eur: {
     type: Number,
-    minLength: 1,
-    default: 99,
+    required: true,
+    default: 0,
   },
   discount: {
     type: Boolean,
     default: false,
-    value: 0,
+    required: false,
   },
   item_collection: {
     type: mongoose.Schema.Types.ObjectId,
@@ -36,14 +37,16 @@ const ItemSchema = new mongoose.Schema({
   carry_over: {
     type: Boolean,
     default: false,
+    required: false,
   },
   color: {
-    type: Object,
+    type: [Object],
     required: true,
   },
   in_stock: {
     type: Boolean,
     required: true,
+    default: true,
   },
   material: {
     type: String,
@@ -58,14 +61,14 @@ const ItemSchema = new mongoose.Schema({
       m: true,
       l: true,
       xl: true,
+      oneSize: true,
     },
+    required: true,
   },
   height: {
-    type: Object,
-    default: {
-      below: true,
-      above: true,
-    },
+    type: Boolean,
+    default: false,
+    required: true,
   },
   article: {
     type: String,
@@ -74,10 +77,12 @@ const ItemSchema = new mongoose.Schema({
   sale: {
     type: Boolean,
     default: false,
+    required: true,
   },
   description: {
     type: String,
     default: 'no description provided',
+    required: true,
   },
   gender: {
     type: String,
@@ -86,6 +91,7 @@ const ItemSchema = new mongoose.Schema({
   recycled: {
     type: Boolean,
     required: true,
+    default: false,
   },
 })
 
