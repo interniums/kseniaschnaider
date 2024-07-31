@@ -17,22 +17,36 @@ import { PlusIcon } from '@radix-ui/react-icons'
 import SizePicker from './SizePicker'
 import ColorPicker from './ColorPicker'
 import FormInput from './FormInput'
-import { collections, getCategories } from '@/lib/utils'
+import { collections, getCategories, getCollections } from '@/lib/utils'
 import { Toaster } from './ui/toaster'
 import { useToast } from './ui/use-toast'
 import { SelectPortal, SelectViewport } from '@radix-ui/react-select'
 import ImagesForm from './ImagesForm'
 import axios from 'axios'
+import ItemSuccess from './ItemSuccess'
+import { Navigate, redirect, useNavigate } from 'react-router-dom'
 
 export default function AdminForm() {
   const { toast } = useToast()
+  const navigate = useNavigate()
   const [categories, setCategories] = useState()
+  const [collections, setCollections] = useState()
+  const [success, setSuccess] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [postError, setPostError] = useState(false)
 
   useEffect(() => {
     const get_cat = async () => {
       setCategories(await getCategories())
     }
     get_cat()
+  }, [])
+
+  useEffect(() => {
+    const get_col = async () => {
+      setCollections(await getCollections())
+    }
+    get_col()
   }, [])
 
   // states
@@ -56,6 +70,7 @@ export default function AdminForm() {
     oneSize: false,
   })
   const [category, setCategory] = useState('')
+  const [doubled, setDoubled] = useState(true)
 
   // utils
   const [colorInputs, setColorInputs] = useState([0])
@@ -70,6 +85,7 @@ export default function AdminForm() {
     article: false,
     images: false,
     category: false,
+    doubled: false,
   })
 
   const addColorInput = () => {
@@ -159,6 +175,7 @@ export default function AdminForm() {
   }, [error])
 
   const pushData = async () => {
+    setLoading(true)
     axios
       .post('http://localhost:3000/item/add', {
         name,
@@ -172,14 +189,22 @@ export default function AdminForm() {
         article,
         size,
         images,
+        doubled,
       })
       .then((response) => {
         console.log(response.status)
+        if (response.status == 200) {
+          setLoading(false)
+          setSuccess(true)
+        } else {
+          setPostError(true)
+        }
       })
   }
 
   return (
     <main className="abosulute inset-0 py-12 px-40 flex w-full h-screen justify-center items-center">
+      {success && <Navigate to="/admin-page/item-form/success" />}
       <div className="w-full rounded-md border max shadow-md py-8 px-8 overflow-y-scroll h-full">
         <Toaster />
         <h1 className="text-xl font-bold mb-6">
@@ -262,9 +287,9 @@ export default function AdminForm() {
                       <SelectValue placeholder="виберіть колецію" />
                     </SelectTrigger>
                     <SelectContent>
-                      {collections.map((item, i) => (
-                        <SelectItem key={i} value={item}>
-                          {item}
+                      {collections?.map((item) => (
+                        <SelectItem key={item._id} value={item.name}>
+                          {item.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -368,6 +393,35 @@ export default function AdminForm() {
                     className="size-5"
                     checked={gender === 'Унісекс' ? true : false}
                     onCheckedChange={() => setGender('Унісекс')}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="w-full grid gap-4">
+              <Label className="text-xl" htmlFor="doubled">
+                Виріб в декількох кольорах?
+              </Label>
+              <div id="doubled" className="grid grid-flow-col items-center">
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="yap">Так</Label>
+                  <Checkbox
+                    id="yap"
+                    className="size-5"
+                    onCheckedChange={(e) => {
+                      setDoubled(!doubled)
+                    }}
+                    checked={doubled ? false : true}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="nope">Ні</Label>
+                  <Checkbox
+                    id="nope"
+                    className="size-5"
+                    onCheckedChange={(e) => {
+                      setDoubled(!doubled)
+                    }}
+                    checked={!doubled ? false : true}
                   />
                 </div>
               </div>

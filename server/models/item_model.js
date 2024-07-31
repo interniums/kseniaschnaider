@@ -19,6 +19,7 @@ const ItemSchema = new mongoose.Schema({
   cost_uah: {
     type: Number,
     required: true,
+    default: 0,
   },
   cost_eur: {
     type: Number,
@@ -41,6 +42,11 @@ const ItemSchema = new mongoose.Schema({
   },
   color: {
     type: [Object],
+    required: true,
+  },
+  doubled: {
+    type: Boolean,
+    default: false,
     required: true,
   },
   in_stock: {

@@ -7,9 +7,6 @@ const AdminPage = () => {
     <>
       <AdminNav />
       <Outlet />
-      <main>
-        <div></div>
-      </main>
     </>
   )
 }

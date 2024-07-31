@@ -16,4 +16,14 @@ const add_collection = asyncHandler(async (req, res, next) => {
   }
 })
 
-module.exports = { add_collection }
+const get_collections = asyncHandler(async (req, res, next) => {
+  const collections = await Collection.find()
+
+  if (collections) {
+    res.status(200).json(collections)
+  } else {
+    res.status(404).json({ message: 'No collections found.' })
+  }
+})
+
+module.exports = { add_collection, get_collections }
