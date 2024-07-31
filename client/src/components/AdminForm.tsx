@@ -17,7 +17,7 @@ import { PlusIcon } from '@radix-ui/react-icons'
 import SizePicker from './SizePicker'
 import ColorPicker from './ColorPicker'
 import FormInput from './FormInput'
-import { collections } from '@/lib/utils'
+import { collections, getCategories } from '@/lib/utils'
 import { Toaster } from './ui/toaster'
 import { useToast } from './ui/use-toast'
 import { SelectPortal, SelectViewport } from '@radix-ui/react-select'
@@ -26,6 +26,14 @@ import axios from 'axios'
 
 export default function AdminForm() {
   const { toast } = useToast()
+  const [categories, setCategories] = useState()
+
+  useEffect(() => {
+    const get_cat = async () => {
+      setCategories(await getCategories())
+    }
+    get_cat()
+  }, [])
 
   // states
   const [name, setName] = useState('')
@@ -47,7 +55,7 @@ export default function AdminForm() {
     xl: true,
     oneSize: false,
   })
-  console.log(images)
+  const [category, setCategory] = useState('')
 
   // utils
   const [colorInputs, setColorInputs] = useState([0])
@@ -61,6 +69,7 @@ export default function AdminForm() {
     color: false,
     article: false,
     images: false,
+    category: false,
   })
 
   const addColorInput = () => {
@@ -84,6 +93,9 @@ export default function AdminForm() {
     if (!Object(color).length)
       return setError((prev) => ({ ...prev, color: true }))
     if (!images.length) return setError((prev) => ({ ...prev, images: true }))
+    pushData()
+    if (!category.length)
+      return setError((prev) => ({ ...prev, category: true }))
     pushData()
   }
 
@@ -133,6 +145,13 @@ export default function AdminForm() {
     if (error.images) {
       toast({
         title: 'Додайте фотографії.',
+        description: 'Заповніть всі поля.',
+        variant: 'destructive',
+      })
+    }
+    if (error.category) {
+      toast({
+        title: 'Додайте категорію.',
         description: 'Заповніть всі поля.',
         variant: 'destructive',
       })
@@ -393,6 +412,29 @@ export default function AdminForm() {
                 error={error}
                 setError={setError}
               />
+            </div>
+            <div className="w-full grid gap-4">
+              <Label className="text-xl">Виберіть категорію виробу.</Label>
+              <div
+                style={{ outline: error.category ? '2px solid red' : 'none' }}
+                className="rounded-md"
+                onFocus={() =>
+                  setError((prev) => ({ ...prev, category: false }))
+                }
+              >
+                <Select onValueChange={setCategory}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="виберіть категорію" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories?.map((item) => (
+                      <SelectItem key={item._id} value={item._id}>
+                        {item.name} - {item.gender}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
         </form>

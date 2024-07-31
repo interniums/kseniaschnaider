@@ -1,5 +1,7 @@
+// @ts-nocheck
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import axios from 'axios'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -23,3 +25,11 @@ export const collections = [
   'some collection15',
   'some collection16',
 ]
+
+export const getCategories = async () => {
+  let res
+  await axios.get('http://localhost:3000/category').then((response) => {
+    res = response.data
+  })
+  return res
+}
