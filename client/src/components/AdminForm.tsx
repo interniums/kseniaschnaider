@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
@@ -25,31 +25,20 @@ import ImagesForm from './ImagesForm'
 import axios from 'axios'
 import ItemSuccess from './ItemSuccess'
 import { Navigate, redirect, useNavigate } from 'react-router-dom'
+import AdminContext from '@/hooks/AdminContext'
 
 export default function AdminForm() {
+  // app states
+  const adminData = useContext(AdminContext)
   const { toast } = useToast()
   const navigate = useNavigate()
   const [categories, setCategories] = useState()
   const [collections, setCollections] = useState()
-  const [success, setSuccess] = useState(true)
+  const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [postError, setPostError] = useState(false)
 
-  useEffect(() => {
-    const get_cat = async () => {
-      setCategories(await getCategories())
-    }
-    get_cat()
-  }, [])
-
-  useEffect(() => {
-    const get_col = async () => {
-      setCollections(await getCollections())
-    }
-    get_col()
-  }, [])
-
-  // states
+  // data states
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [material, setMaterial] = useState('')
@@ -72,7 +61,7 @@ export default function AdminForm() {
   const [category, setCategory] = useState('')
   const [doubled, setDoubled] = useState(true)
 
-  // utils
+  // utils states
   const [colorInputs, setColorInputs] = useState([0])
   const [imagesInputs, setImagesInputs] = useState([0])
   const [error, setError] = useState({
@@ -87,6 +76,20 @@ export default function AdminForm() {
     category: false,
     doubled: false,
   })
+
+  useEffect(() => {
+    const get_cat = async () => {
+      setCategories(await getCategories())
+    }
+    get_cat()
+  }, [])
+
+  useEffect(() => {
+    const get_col = async () => {
+      setCollections(await getCollections())
+    }
+    get_col()
+  }, [])
 
   const addColorInput = () => {
     setColorInputs([...colorInputs, colorInputs.length])
@@ -109,7 +112,6 @@ export default function AdminForm() {
     if (!Object(color).length)
       return setError((prev) => ({ ...prev, color: true }))
     if (!images.length) return setError((prev) => ({ ...prev, images: true }))
-    pushData()
     if (!category.length)
       return setError((prev) => ({ ...prev, category: true }))
     pushData()
@@ -194,6 +196,12 @@ export default function AdminForm() {
       .then((response) => {
         console.log(response.status)
         if (response.status == 200) {
+          adminData.name = name
+          adminData.images = images
+          adminData.cost = cost
+          adminData.category = category
+          adminData.description = description
+
           setLoading(false)
           setSuccess(true)
         } else {
@@ -203,9 +211,9 @@ export default function AdminForm() {
   }
 
   return (
-    <main className="abosulute inset-0 py-12 px-40 flex w-full h-screen justify-center items-center">
+    <main className="abosulute inset-0 py-12 px-60 flex w-full h-screen justify-center items-center">
       {success && <Navigate to="/admin-page/item-form/success" />}
-      <div className="w-full rounded-md border max shadow-md py-8 px-8 overflow-y-scroll h-full">
+      <div className="w-full rounded-md border max shadow-md py-8 px-8 overflow-y-auto h-full">
         <Toaster />
         <h1 className="text-xl font-bold mb-6">
           Заповніть поля, щоб створити нову позицію.
@@ -227,7 +235,7 @@ export default function AdminForm() {
               />
             </div>
             <div className="w-full grid gap-4">
-              <Label htmlFor="description" className="text-xl">
+              <Label htmlFor="description" className="">
                 Опис пизиції.
               </Label>
               <Textarea
@@ -237,6 +245,7 @@ export default function AdminForm() {
                 placeholder={
                   error.description ? 'заповніть поле' : 'опишіть позциію'
                 }
+                autoComplete="off"
                 onChange={(e) => setDescription(e.target.value)}
                 style={{
                   outline: error.description ? '2px solid red' : 'none',
@@ -269,7 +278,7 @@ export default function AdminForm() {
               />
             </div>
             <div className="w-full grid gap-4">
-              <Label htmlFor="collection" className="text-xl">
+              <Label htmlFor="collection" className="">
                 Виберіть колецію.
               </Label>
               <div id="collection">
@@ -303,7 +312,7 @@ export default function AdminForm() {
               </div>
             </div>
             <div className="w-full grid gap-4">
-              <Label className="text-xl" htmlFor="images">
+              <Label className="" htmlFor="images">
                 Додайте посилання на фотографії виробу.
               </Label>
               <p>
@@ -333,17 +342,19 @@ export default function AdminForm() {
               </div>
             </div>
           </div>
-          <div className="rightSite flex flex-col gap-4">
-            <div className="w-full grid gap-6">
+          <div className="rightSite flex flex-col gap-8">
+            <div className="w-full grid gap-4">
               <SizePicker setValue={setSize} size={size} />
             </div>
-            <div className="w-full grid gap-6">
-              <Label htmlFor="height" className="text-xl">
+            <div className="w-full grid gap-4">
+              <Label htmlFor="height" className="">
                 Градація виробу по зросту.
               </Label>
               <div id="height" className="grid grid-flow-col items-center">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="yes">Так</Label>
+                  <Label htmlFor="yes" className="text-xs">
+                    Так
+                  </Label>
                   <Checkbox
                     onSelect={(e) => setHeight(e.target.value)}
                     id="yes"
@@ -353,7 +364,9 @@ export default function AdminForm() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="no">Ні</Label>
+                  <Label htmlFor="no" className="text-xs">
+                    Ні
+                  </Label>
                   <Checkbox
                     id="no"
                     className="size-5"
@@ -363,13 +376,15 @@ export default function AdminForm() {
                 </div>
               </div>
             </div>
-            <div className="w-full grid gap-6">
-              <Label htmlFor="gender" className="text-xl">
+            <div className="w-full grid gap-4">
+              <Label htmlFor="gender" className="">
                 Гендер виробу.
               </Label>
               <div id="gender" className="grid grid-flow-col items-center">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="male">Чоловічий</Label>
+                  <Label htmlFor="male" className="text-xs">
+                    Чоловічий
+                  </Label>
                   <Checkbox
                     id="male"
                     className="size-5"
@@ -378,7 +393,9 @@ export default function AdminForm() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="women">Жіночий</Label>
+                  <Label htmlFor="women" className="text-xs">
+                    Жіночий
+                  </Label>
                   <Checkbox
                     id="women"
                     className="size-5"
@@ -387,7 +404,9 @@ export default function AdminForm() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="unisex">Унісекс</Label>
+                  <Label htmlFor="unisex" className="text-xs">
+                    Унісекс
+                  </Label>
                   <Checkbox
                     id="unisex"
                     className="size-5"
@@ -398,12 +417,14 @@ export default function AdminForm() {
               </div>
             </div>
             <div className="w-full grid gap-4">
-              <Label className="text-xl" htmlFor="doubled">
+              <Label className="" htmlFor="doubled">
                 Виріб в декількох кольорах?
               </Label>
               <div id="doubled" className="grid grid-flow-col items-center">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="yap">Так</Label>
+                  <Label htmlFor="yap" className="text-xs">
+                    Так
+                  </Label>
                   <Checkbox
                     id="yap"
                     className="size-5"
@@ -414,7 +435,9 @@ export default function AdminForm() {
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="nope">Ні</Label>
+                  <Label htmlFor="nope" className="text-xs">
+                    Ні
+                  </Label>
                   <Checkbox
                     id="nope"
                     className="size-5"
@@ -427,7 +450,7 @@ export default function AdminForm() {
               </div>
             </div>
             <div className="w-full grid gap-4">
-              <Label htmlFor="color" className="text-xl">
+              <Label htmlFor="color" className="">
                 Виберіть колір чи кольори виробу.
               </Label>
               <p>
@@ -468,7 +491,7 @@ export default function AdminForm() {
               />
             </div>
             <div className="w-full grid gap-4">
-              <Label className="text-xl">Виберіть категорію виробу.</Label>
+              <Label className="">Виберіть категорію виробу.</Label>
               <div
                 style={{ outline: error.category ? '2px solid red' : 'none' }}
                 className="rounded-md"
@@ -495,10 +518,10 @@ export default function AdminForm() {
         <div className="w-full flex items-center justify-end mt-12">
           <Button
             type="button"
-            className="bg-slate-200 text-black py-6 px-8 text-xl hover:bg-slate-300"
+            className="bg-slate-200 text-black py-6 px-8 text-xl hover:bg-slate-300 font-bold"
             onClick={validateForm}
           >
-            Submit
+            SUBMIT
           </Button>
         </div>
       </div>

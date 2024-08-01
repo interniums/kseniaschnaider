@@ -1,5 +1,12 @@
 // @ts-nocheck
 
+import { useEffect, useState } from 'react'
+import AdminSearch from './AdminSearch'
+
 export default function AdminHome() {
-  return <></>
+  return (
+    <div>
+      <AdminSearch />
+    </div>
+  )
 }

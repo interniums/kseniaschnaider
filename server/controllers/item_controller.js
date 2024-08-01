@@ -34,13 +34,11 @@ const add_new_item = asyncHandler(async (req, res, next) => {
     !material ||
     !cost ||
     !collection ||
-    !height ||
     !gender ||
     !color ||
     !article ||
     !images ||
-    !size ||
-    !doubled
+    !size
   ) {
     return res.status(400).json({ message: 'Provide all item info.' })
   }
@@ -60,7 +58,6 @@ const add_new_item = asyncHandler(async (req, res, next) => {
     doubled,
   }
   const item = await Item.create(newItem)
-  console.log(item)
 
   if (item) {
     res.status(200).json({ message: 'Item successfully created.' })

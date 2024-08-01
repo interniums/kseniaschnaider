@@ -13,7 +13,7 @@ export default function FormInput({
 }) {
   return (
     <>
-      <Label htmlFor={id} className="text-xl">
+      <Label htmlFor={id} className="">
         {label}
       </Label>
       <Input
@@ -25,6 +25,7 @@ export default function FormInput({
         onChange={(e) => {
           setValue(e.target.value)
         }}
+        autoComplete="off"
         onInput={() => {
           setError((prev) => ({ ...prev, [id]: false }))
         }}

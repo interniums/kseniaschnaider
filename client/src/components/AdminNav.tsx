@@ -10,12 +10,13 @@ import {
 import { useState } from 'react'
 import { Separator } from './ui/separator'
 import { Label } from './ui/label'
+import { Link } from 'react-router-dom'
 
 export default function AdminNav() {
   const [resize, setResize] = useState(false)
 
   return (
-    <main
+    <div
       className={
         resize
           ? 'absolute left-0 h-screen w-44 bg-white transition-all ease-in-out'
@@ -36,36 +37,47 @@ export default function AdminNav() {
           </div>
           <Separator className="w-full mt-2" />
         </header>
-        <main className={'w-full grid items-center justify-center mb-6'}>
+        <main
+          className={
+            'w-full grid grid-flow-row items-center mb-6 justify-center'
+          }
+        >
           <div className="mb-6 flex gap-4 items-center justify-start">
-            <div className="flex gap-2 items-center">
-              <div className="rounded-full hover:bg-slate-200 py-2 px-2">
-                <HomeIcon className="size-5 cursor-pointer" id="home" />
+            <Link to="/admin-page">
+              <div className="flex gap-2 items-center">
+                <div className="rounded-full hover:bg-slate-200 py-2 px-2">
+                  <HomeIcon className="size-5 cursor-pointer" id="home" />
+                </div>
+                {resize ? (
+                  <Label
+                    htmlFor="home"
+                    className="transition-all ease-in-out cursor-pointer"
+                  >
+                    Home
+                  </Label>
+                ) : null}
               </div>
-              {resize ? (
-                <Label
-                  htmlFor="home"
-                  className="transition-all ease-in-out cursor-pointer"
-                >
-                  Home
-                </Label>
-              ) : null}
-            </div>
+            </Link>
           </div>
-          <div className="mb-6 flex gap-4 items-center justify-start">
-            <div className="flex gap-2 items-center">
-              <div className="rounded-full hover:bg-slate-200 py-2 px-2">
-                <PlusCircledIcon className="size-5 cursor-pointer" id="plus" />
+          <div className="mb-6 flex gap-4 items-center">
+            <Link to="/admin-page/item-form">
+              <div className="flex gap-2 items-center">
+                <div className="rounded-full hover:bg-slate-200 py-2 px-2">
+                  <PlusCircledIcon
+                    className="size-5 cursor-pointer"
+                    id="plus"
+                  />
+                </div>
+                {resize ? (
+                  <Label
+                    htmlFor="plus"
+                    className="transition-all ease-in-out cursor-pointer"
+                  >
+                    Add item
+                  </Label>
+                ) : null}
               </div>
-              {resize ? (
-                <Label
-                  htmlFor="plus"
-                  className="transition-all ease-in-out cursor-pointer"
-                >
-                  Add item
-                </Label>
-              ) : null}
-            </div>
+            </Link>
           </div>
           <div className="mb-6 flex gap-4 items-center justify-start">
             <div className="flex gap-2 items-center">
@@ -102,6 +114,6 @@ export default function AdminNav() {
           </div>
         </main>
       </div>
-    </main>
+    </div>
   )
 }

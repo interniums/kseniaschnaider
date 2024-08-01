@@ -60,6 +60,7 @@ export default function ImagesForm({
             onChange={(e) => {
               setImageLink(e.target.value)
             }}
+            autoComplete="off"
             onFocus={() => {
               setErrorImage(false)
               setError((prev) => ({ ...prev, images: false }))
@@ -75,7 +76,7 @@ export default function ImagesForm({
               handleSubmit(e)
             }}
           >
-            Submit
+            SUBMIT
           </Button>
         ) : (
           <>

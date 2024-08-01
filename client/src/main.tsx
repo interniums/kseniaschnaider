@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
@@ -7,6 +8,9 @@ import AdminPage from './pages/AdminPage'
 import AdminForm from './components/AdminForm'
 import AdminHome from './components/AdminHome'
 import ItemSuccess from './components/ItemSuccess'
+import AdminItem from './components/AdminItem'
+import AdminCollection from './components/AdminCollection'
+import AdminCategory from './components/AdminCategory'
 
 const router = createBrowserRouter([
   {
@@ -28,6 +32,18 @@ const router = createBrowserRouter([
       {
         path: '/admin-page/item-form/success',
         element: <ItemSuccess />,
+      },
+      {
+        path: '/admin-page/item/:id',
+        element: <AdminItem />,
+      },
+      {
+        path: '/admin-page/collection/:id',
+        element: <AdminCollection />,
+      },
+      {
+        path: '/admin-page/category/:id',
+        element: <AdminCategory />,
       },
     ],
   },

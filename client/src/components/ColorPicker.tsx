@@ -63,6 +63,7 @@ export default function ColorPicker({
             type="text"
             id="color"
             placeholder="назва кольору"
+            autoComplete="off"
             onChange={(e) => {
               setColorName(e.target.value)
             }}
@@ -89,7 +90,7 @@ export default function ColorPicker({
               handleSubmit(e)
             }}
           >
-            Submit
+            SUBMIT
           </Button>
         ) : (
           <>
