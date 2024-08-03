@@ -23,10 +23,9 @@ const add_new_item = asyncHandler(async (req, res, next) => {
     article,
     images,
     size,
-    doubled,
   } = req.body
 
-  // console.log(req.body)
+  console.log(req.body)
 
   if (
     !name ||
@@ -43,19 +42,20 @@ const add_new_item = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ message: 'Provide all item info.' })
   }
   const findCollection = await Collection.findOne({ name: collection })
+
   const newItem = {
     name,
     description,
     material,
     cost_uah: cost,
     item_collection: findCollection,
+    collection_name: collection,
     height,
     gender,
     color,
     article,
     img: images,
     size,
-    doubled,
   }
   const item = await Item.create(newItem)
 
@@ -66,4 +66,27 @@ const add_new_item = asyncHandler(async (req, res, next) => {
   }
 })
 
-module.exports = { get_all_items, add_new_item }
+const edit_item = asyncHandler(async (req, res, next) => {
+  let { _id, sale, discount, active, hide } = req.body
+  console.log(req.body)
+
+  !active ? (active = true) : null
+  hide ? (active = false) : null
+
+  if (!_id) {
+    return res.status(400).json({ message: 'Invalid data.' })
+  }
+
+  const findAndUpdate = await Item.updateMany(
+    { _id: { $in: _id } },
+    { $set: { active: active, sale: sale, discount: discount } }
+  )
+
+  if (findAndUpdate) {
+    res.status(200).json({ message: 'Success' })
+  } else {
+    res.status(400).json({ message: 'Error' })
+  }
+})
+
+module.exports = { get_all_items, add_new_item, edit_item }

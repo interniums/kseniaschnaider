@@ -8,16 +8,16 @@ import { Link } from 'react-router-dom'
 export default function ItemSuccess() {
   const adminData = useContext(AdminContext)
   return (
-    <main className="abosulute inset-0 py-12 px-40 flex w-full h-screen justify-center items-center">
+    <main className="abosulute inset-0 py-28 px-60 flex w-full h-screen justify-center items-center">
       <div className="w-full rounded-md border max shadow-md py-8 px-8 h-full grid">
         <h1 className="text-3xl font-bold">Виріб успішно доданий.</h1>
         <div className="w-full overflow-y-auto grid">
           <div className="w-full items-center justify-center flex">
-            <div className="w-5/6 grid grid-cols-3">
+            <div className="w-5/6 grid grid-flow-col items-center justify-center">
               {adminData?.images.map((item, i) => (
-                <div key={i}>
+                <div key={i} className="  ">
                   <img
-                    className="object-contain"
+                    className="object-contain h-80"
                     src={adminData.images[i]}
                     alt="photo"
                   />
@@ -32,7 +32,7 @@ export default function ItemSuccess() {
           </div>
         </div>
         <div className="w-full flex items-end justify-end">
-          <Link to="../">
+          <Link to="/admin-page/item-form">
             <Button className="bg-slate-200 hover:bg-slate-300 text-black py-6 px-12 text-2xl">
               Back
             </Button>

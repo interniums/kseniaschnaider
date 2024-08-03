@@ -8,9 +8,11 @@ import AdminPage from './pages/AdminPage'
 import AdminForm from './components/AdminForm'
 import AdminHome from './components/AdminHome'
 import ItemSuccess from './components/ItemSuccess'
-import AdminItem from './components/AdminItem'
 import AdminCollection from './components/AdminCollection'
 import AdminCategory from './components/AdminCategory'
+import path from 'path'
+import AdminItems from './components/AdminItems'
+import AdminItem from './components/AdminItem'
 
 const router = createBrowserRouter([
   {
@@ -32,6 +34,11 @@ const router = createBrowserRouter([
       {
         path: '/admin-page/item-form/success',
         element: <ItemSuccess />,
+      },
+      {
+        path: '/admin-page/item',
+        element: <AdminItems />,
+        // children: [{ path: '/admin-page/item/:id', element: <AdminItem /> }],
       },
       {
         path: '/admin-page/item/:id',

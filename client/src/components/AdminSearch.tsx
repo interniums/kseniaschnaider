@@ -99,7 +99,7 @@ export default function AdminSearch() {
       {loading ? (
         <div>Loading</div>
       ) : (
-        <header className="w-full flex items-center justify-center pt-4">
+        <header className="w-full flex items-center justify-center pt-4 absolute z-10">
           <div className="w-1/3">
             <div
               className="relative flex items-center"
@@ -128,82 +128,95 @@ export default function AdminSearch() {
               />
             </div>
             {open && (
-              <>
-                <div
-                  ref={dropDownRef2}
-                  style={{
-                    borderTopLeftRadius: open ? '0px' : '6px',
-                    borderTopRightRadius: open ? '0px' : '6px',
-                  }}
-                  className="w-full grid gap-4 py-2 px-4 border border-t-0 max-h-80 h-min overflow-y-auto rounded-md"
-                >
-                  {!displayCollections?.length == 0 ? (
-                    <div>
-                      <div className="mb-4">
-                        <p className="text-xl mb-2">Collections</p>
-                        <hr />
-                      </div>
-                      <div className="grid gap-2">
-                        {displayCollections?.map((items, i) => (
-                          <Link
-                            to={`/admin-page/collection/${items?._id}`}
-                            key={items?._id + i}
-                          >
-                            <div className="hover:bg-slate-200 py-1 px-4 cursor-pointer rounded">
-                              <p className="">{items?.name}</p>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
+              <div
+                ref={dropDownRef2}
+                style={{
+                  borderTopLeftRadius: open ? '0px' : '6px',
+                  borderTopRightRadius: open ? '0px' : '6px',
+                }}
+                className="w-full grid gap-4 py-2 px-4 border border-t-0 max-h-80 h-min overflow-y-auto rounded-md bg-white transition-all ease-in-out z-10"
+              >
+                {!displayCollections?.length == 0 ? (
+                  <div>
+                    <div className="mb-4">
+                      <Link to="/admin-page/collection">
+                        <p className="text-xl mb-2 hover:underline cursor-pointer">
+                          Collections
+                        </p>
+                      </Link>
+                      <hr />
                     </div>
-                  ) : null}
-                  {!displayCategories?.length == 0 ? (
-                    <div>
-                      <div className="mb-4">
-                        <p className="text-xl mb-2">Categories</p>
-                        <hr />
-                      </div>
-                      <div className="grid gap-2">
-                        {displayCategories?.map((items, i) => (
-                          <Link
-                            key={items._id + i}
-                            to={`/admin-page/category/${items?._id}`}
-                          >
-                            <div className="flex gap-4 hover:bg-slate-200 py-2 px-4 cursor-pointer rounded items-center">
-                              <p className="">
-                                {items?.name} - {items?.gender}
-                              </p>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
+                    <div className="grid gap-2">
+                      {displayCollections?.map((items, i) => (
+                        <Link
+                          onClick={() => setOpen(false)}
+                          to={`/admin-page/collection/${items?._id}`}
+                          key={items?._id + i}
+                        >
+                          <div className="hover:bg-slate-200 py-1 px-4 cursor-pointer rounded">
+                            <p className="">{items?.name}</p>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
-                  ) : null}
-                  {!displayItems?.length == 0 ? (
-                    <div>
-                      <div className="mb-4">
-                        <p className="text-xl mb-2">Items</p>
-                        <hr />
-                      </div>
-                      <div className="grid gap-2">
-                        {displayItems?.map((items, i) => (
-                          <Link
-                            key={items._id + i}
-                            to={`/admin-page/item/${items?._id}`}
-                          >
-                            <div className="flex gap-4 hover:bg-slate-100 py-2 px-4 cursor-pointer rounded items-center">
-                              <div className="max-w-32">
-                                <img src={items.img[0]} alt="img" />
-                              </div>
-                              <p className="">{items?.name}</p>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
+                  </div>
+                ) : null}
+                {!displayCategories?.length == 0 ? (
+                  <div>
+                    <div className="mb-4">
+                      <Link to="/admin-page/category">
+                        <p className="text-xl mb-2 hover:underline cursor-pointer">
+                          Categories
+                        </p>
+                      </Link>
+                      <hr />
                     </div>
-                  ) : null}
-                </div>
-              </>
+                    <div className="grid gap-2">
+                      {displayCategories?.map((items, i) => (
+                        <Link
+                          onClick={() => setOpen(false)}
+                          key={items._id + i}
+                          to={`/admin-page/category/${items?._id}`}
+                        >
+                          <div className="flex gap-4 hover:bg-slate-200 py-2 px-4 cursor-pointer rounded items-center">
+                            <p className="">
+                              {items?.name} - {items?.gender}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+                {!displayItems?.length == 0 ? (
+                  <div>
+                    <div className="mb-4">
+                      <Link to="/admin-page/item">
+                        <p className="text-xl mb-2 hover:underline cursor-pointer">
+                          Items
+                        </p>
+                      </Link>
+                      <hr />
+                    </div>
+                    <div className="grid gap-2">
+                      {displayItems?.map((items, i) => (
+                        <Link
+                          onClick={() => setOpen(false)}
+                          key={items._id + i}
+                          to={`/admin-page/item/${items?._id}`}
+                        >
+                          <div className="flex gap-4 hover:bg-slate-100 py-2 px-4 cursor-pointer rounded items-center">
+                            <div className="max-w-32">
+                              <img src={items.img[0]} alt="img" />
+                            </div>
+                            <p className="">{items?.name}</p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
             )}
           </div>
         </header>

@@ -16,6 +16,12 @@ export default function FormInput({
       <Label htmlFor={id} className="">
         {label}
       </Label>
+      {label == 'Кількість виробу' ? (
+        <p>
+          Кількість виробу автоматично застосовується для всіх розмірів, за
+          необхідності ці данні можна змінити на сторінці виробу.
+        </p>
+      ) : null}
       <Input
         style={{ outline: error[id] ? '2px solid red' : 'none' }}
         required

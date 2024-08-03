@@ -27,13 +27,18 @@ const ItemSchema = new mongoose.Schema({
     default: 0,
   },
   discount: {
-    type: Boolean,
-    default: false,
-    required: false,
+    type: Number,
+    default: 0,
+    required: true,
   },
   item_collection: {
     type: mongoose.Schema.Types.ObjectId,
     required: false,
+  },
+  collection_name: {
+    type: String,
+    required: true,
+    default: '',
   },
   carry_over: {
     type: Boolean,
@@ -44,31 +49,21 @@ const ItemSchema = new mongoose.Schema({
     type: [Object],
     required: true,
   },
-  doubled: {
-    type: Boolean,
-    default: false,
-    required: true,
-  },
-  in_stock: {
-    type: Boolean,
-    required: true,
-    default: true,
-  },
   material: {
     type: String,
     default: 'unknown material',
   },
   size: {
     type: Object,
-    default: {
-      xxs: true,
-      xs: true,
-      s: true,
-      m: true,
-      l: true,
-      xl: true,
-      oneSize: true,
-    },
+    default: [
+      { xxs: true, in_stock: 0 },
+      { xs: true, in_stock: 0 },
+      { s: true, in_stock: 0 },
+      { m: true, in_stock: 0 },
+      { l: true, in_stock: 0 },
+      { xl: true, in_stock: 0 },
+      { oneSize: true, in_stock: 0 },
+    ],
     required: true,
   },
   height: {
@@ -98,6 +93,11 @@ const ItemSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
     default: false,
+  },
+  active: {
+    type: Boolean,
+    default: true,
+    required: true,
   },
 })
 

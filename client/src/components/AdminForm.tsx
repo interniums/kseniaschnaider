@@ -59,7 +59,7 @@ export default function AdminForm() {
     oneSize: false,
   })
   const [category, setCategory] = useState('')
-  const [doubled, setDoubled] = useState(true)
+  const [stock, setStock] = useState(0)
 
   // utils states
   const [colorInputs, setColorInputs] = useState([0])
@@ -74,7 +74,7 @@ export default function AdminForm() {
     article: false,
     images: false,
     category: false,
-    doubled: false,
+    stock: false,
   })
 
   useEffect(() => {
@@ -114,6 +114,7 @@ export default function AdminForm() {
     if (!images.length) return setError((prev) => ({ ...prev, images: true }))
     if (!category.length)
       return setError((prev) => ({ ...prev, category: true }))
+    if (stock == 0) return setError((prev) => ({ ...prev, stock: true }))
     pushData()
   }
 
@@ -174,6 +175,13 @@ export default function AdminForm() {
         variant: 'destructive',
       })
     }
+    if (error.stock) {
+      toast({
+        title: 'Введіть кіклькість товару.',
+        description: 'Заповніть всі поля.',
+        variant: 'destructive',
+      })
+    }
   }, [error])
 
   const pushData = async () => {
@@ -191,7 +199,6 @@ export default function AdminForm() {
         article,
         size,
         images,
-        doubled,
       })
       .then((response) => {
         console.log(response.status)
@@ -211,12 +218,12 @@ export default function AdminForm() {
   }
 
   return (
-    <main className="abosulute inset-0 py-12 px-60 flex w-full h-screen justify-center items-center">
+    <main className="abosulute inset-0 py-28 px-60 flex w-full h-screen justify-center items-center">
       {success && <Navigate to="/admin-page/item-form/success" />}
       <div className="w-full rounded-md border max shadow-md py-8 px-8 overflow-y-auto h-full">
         <Toaster />
         <h1 className="text-xl font-bold mb-6">
-          Заповніть поля, щоб створити нову позицію.
+          Заповніть поля, щоб створити нову позицію
         </h1>
         <form
           style={{ gridTemplateColumns: '1.15fr 1fr' }}
@@ -227,7 +234,7 @@ export default function AdminForm() {
               <FormInput
                 setValue={setName}
                 placeholder={'введіть назву позиції'}
-                label={'Назва позиції.'}
+                label={'Назва позиції'}
                 id={'name'}
                 type={'text'}
                 error={error}
@@ -236,7 +243,7 @@ export default function AdminForm() {
             </div>
             <div className="w-full grid gap-4">
               <Label htmlFor="description" className="">
-                Опис пизиції.
+                Опис пизиції
               </Label>
               <Textarea
                 required
@@ -259,7 +266,7 @@ export default function AdminForm() {
               <FormInput
                 setValue={setMaterial}
                 placeholder={'введіть матеріал'}
-                label={'Матеріал виробу.'}
+                label={'Матеріал виробу'}
                 id={'material'}
                 type={'text'}
                 error={error}
@@ -270,7 +277,7 @@ export default function AdminForm() {
               <FormInput
                 setValue={setCost}
                 placeholder={'введіть ціну в гривнях'}
-                label={'Ціна в гривнях.'}
+                label={'Ціна в гривнях'}
                 id={'cost'}
                 type={'number'}
                 error={error}
@@ -278,8 +285,19 @@ export default function AdminForm() {
               />
             </div>
             <div className="w-full grid gap-4">
+              <FormInput
+                setValue={setStock}
+                placeholder={'введіть кількість товару'}
+                label={'Кількість виробу'}
+                id={'stock'}
+                type={'number'}
+                error={error}
+                setError={setError}
+              />
+            </div>
+            <div className="w-full grid gap-4">
               <Label htmlFor="collection" className="">
-                Виберіть колецію.
+                Виберіть колецію
               </Label>
               <div id="collection">
                 <div
@@ -296,6 +314,7 @@ export default function AdminForm() {
                       <SelectValue placeholder="виберіть колецію" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="без колеції">без колеції</SelectItem>
                       {collections?.map((item) => (
                         <SelectItem key={item._id} value={item.name}>
                           {item.name}
@@ -313,11 +332,12 @@ export default function AdminForm() {
             </div>
             <div className="w-full grid gap-4">
               <Label className="" htmlFor="images">
-                Додайте посилання на фотографії виробу.
+                Додайте посилання на фотографії виробу
               </Label>
               <p>
                 Додайте фотографії у порядку в якому вони мають бути розташовані
-                на сайті.
+                на сайті. Фотографії додаються для базового кольору виробу, інші
+                кольори виробу додаються як окремий виріб
               </p>
               <div className="grid gap-4">
                 {imagesInputs.map((item) => (
@@ -348,7 +368,7 @@ export default function AdminForm() {
             </div>
             <div className="w-full grid gap-4">
               <Label htmlFor="height" className="">
-                Градація виробу по зросту.
+                Градація виробу по зросту
               </Label>
               <div id="height" className="grid grid-flow-col items-center">
                 <div className="flex items-center gap-2">
@@ -417,45 +437,12 @@ export default function AdminForm() {
               </div>
             </div>
             <div className="w-full grid gap-4">
-              <Label className="" htmlFor="doubled">
-                Виріб в декількох кольорах?
-              </Label>
-              <div id="doubled" className="grid grid-flow-col items-center">
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="yap" className="text-xs">
-                    Так
-                  </Label>
-                  <Checkbox
-                    id="yap"
-                    className="size-5"
-                    onCheckedChange={(e) => {
-                      setDoubled(!doubled)
-                    }}
-                    checked={doubled ? false : true}
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="nope" className="text-xs">
-                    Ні
-                  </Label>
-                  <Checkbox
-                    id="nope"
-                    className="size-5"
-                    onCheckedChange={(e) => {
-                      setDoubled(!doubled)
-                    }}
-                    checked={!doubled ? false : true}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="w-full grid gap-4">
               <Label htmlFor="color" className="">
-                Виберіть колір чи кольори виробу.
+                Виберіть колір чи кольори виробу
               </Label>
               <p>
                 Введіть назву кольору та колір в палітрі. Ці данні будуть
-                відображатись на сторінці виробу.
+                відображатись на сторінці виробу
               </p>
               <div className="grid gap-4">
                 {colorInputs.map((item) => (
@@ -491,7 +478,7 @@ export default function AdminForm() {
               />
             </div>
             <div className="w-full grid gap-4">
-              <Label className="">Виберіть категорію виробу.</Label>
+              <Label className="">Виберіть категорію виробу</Label>
               <div
                 style={{ outline: error.category ? '2px solid red' : 'none' }}
                 className="rounded-md"
@@ -513,17 +500,17 @@ export default function AdminForm() {
                 </Select>
               </div>
             </div>
+            <div className="w-full flex items-center justify-end mt-12">
+              <Button
+                type="button"
+                className="bg-slate-200 text-black py-6 px-8 text-xl hover:bg-slate-300 font-bold"
+                onClick={validateForm}
+              >
+                SUBMIT
+              </Button>
+            </div>
           </div>
         </form>
-        <div className="w-full flex items-center justify-end mt-12">
-          <Button
-            type="button"
-            className="bg-slate-200 text-black py-6 px-8 text-xl hover:bg-slate-300 font-bold"
-            onClick={validateForm}
-          >
-            SUBMIT
-          </Button>
-        </div>
       </div>
     </main>
   )
