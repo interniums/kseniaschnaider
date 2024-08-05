@@ -139,7 +139,10 @@ export default function AdminSearch() {
                 {!displayCollections?.length == 0 ? (
                   <div>
                     <div className="mb-4">
-                      <Link to="/admin-page/collection">
+                      <Link
+                        to="/admin-page/collection"
+                        onClick={() => setOpen(false)}
+                      >
                         <p className="text-xl mb-2 hover:underline cursor-pointer">
                           Collections
                         </p>
@@ -164,7 +167,10 @@ export default function AdminSearch() {
                 {!displayCategories?.length == 0 ? (
                   <div>
                     <div className="mb-4">
-                      <Link to="/admin-page/category">
+                      <Link
+                        to="/admin-page/category"
+                        onClick={() => setOpen(false)}
+                      >
                         <p className="text-xl mb-2 hover:underline cursor-pointer">
                           Categories
                         </p>
@@ -191,7 +197,10 @@ export default function AdminSearch() {
                 {!displayItems?.length == 0 ? (
                   <div>
                     <div className="mb-4">
-                      <Link to="/admin-page/item">
+                      <Link
+                        to="/admin-page/item"
+                        onClick={() => setOpen(false)}
+                      >
                         <p className="text-xl mb-2 hover:underline cursor-pointer">
                           Items
                         </p>

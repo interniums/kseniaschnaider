@@ -218,9 +218,9 @@ export default function AdminForm() {
   }
 
   return (
-    <main className="abosulute inset-0 py-28 px-60 flex w-full h-screen justify-center items-center">
+    <main className="abosulute inset-0 py-28 px-60 flex w-full min-h-screen overflow-y-clip justify-center items-center">
       {success && <Navigate to="/admin-page/item-form/success" />}
-      <div className="w-full rounded-md border max shadow-md py-8 px-8 overflow-y-auto h-full">
+      <div className="w-full rounded-md border shadow-md py-8 px-8 overflow-y-scroll h-full">
         <Toaster />
         <h1 className="text-xl font-bold mb-6">
           Заповніть поля, щоб створити нову позицію
