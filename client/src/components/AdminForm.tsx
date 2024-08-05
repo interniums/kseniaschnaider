@@ -500,17 +500,17 @@ export default function AdminForm() {
                 </Select>
               </div>
             </div>
-            <div className="w-full flex items-center justify-end mt-12">
-              <Button
-                type="button"
-                className="bg-slate-200 text-black py-6 px-8 text-xl hover:bg-slate-300 font-bold"
-                onClick={validateForm}
-              >
-                SUBMIT
-              </Button>
-            </div>
           </div>
         </form>
+        <div className="w-full flex items-center justify-end mt-12">
+          <Button
+            type="button"
+            className="bg-slate-200 text-black py-6 px-8 text-xl hover:bg-slate-300 font-bold w-full"
+            onClick={validateForm}
+          >
+            SUBMIT
+          </Button>
+        </div>
       </div>
     </main>
   )

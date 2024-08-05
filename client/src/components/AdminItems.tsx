@@ -68,6 +68,8 @@ export default function AdminItems() {
       .then((response) => {
         console.log(response.status)
         if (response.status == 200) {
+          setCheckedPositions([])
+          setAllChecked(false)
           setLoading(false)
           setSuccess(true)
         } else {
