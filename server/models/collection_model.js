@@ -6,11 +6,12 @@ const CollectionSchema = new mongoose.Schema({
     required: true,
     minLength: 3,
   },
-  items: {
-    type: [mongoose.Schema.Types.ObjectId],
-    default: [],
-    required: false,
-  },
+  items: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Item',
+    },
+  ],
 })
 
 module.exports = mongoose.model('Collection', CollectionSchema)

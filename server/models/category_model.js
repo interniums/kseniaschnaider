@@ -6,10 +6,12 @@ const CategorySchema = new mongoose.Schema({
     required: true,
     minLength: 3,
   },
-  items: {
-    type: [mongoose.Schema.Types.ObjectId],
-    default: [],
-  },
+  items: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Item',
+    },
+  ],
   gender: {
     type: String,
     required: true,

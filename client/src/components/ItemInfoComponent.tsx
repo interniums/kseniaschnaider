@@ -12,7 +12,7 @@ import { Toaster } from './ui/toaster'
 import { getCategories, getCollections } from '@/lib/utils'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 
-export default function ItemInfoComponent({ item, value, name, updateData, setUpdateData, variant }) {
+export default function ItemInfoComponent({ item, value, name, updateData, setUpdateData, variant, id }) {
   const { toast } = useToast()
   const [edit, setEdit] = useState(false)
   const [itemValue, setItemValue] = useState(value)
@@ -22,7 +22,7 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
   const [item_collection, setItemCollection] = useState([])
   const [categories, setCategories] = useState([])
 
-  console.log(itemValue, name)
+  // console.log(itemValue, name)
   console.log(item_collection)
 
   const pushChange = () => {
@@ -77,7 +77,7 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
                 {!edit ? (
                   <>
                     <p className="text-md">
-                      {variant == 'select-col' ? item.item.item_collection : item.item.category_name}
+                      {variant == 'select-col' ? item.item.collection_name : item.item.category_name}
                     </p>
                     <Button
                       variant={'outline'}

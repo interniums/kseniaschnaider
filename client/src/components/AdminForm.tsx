@@ -5,13 +5,7 @@ import { Input } from './ui/input'
 import { Label } from './ui/label'
 import { Textarea } from './ui/textarea'
 import LinkInput from './LinkInput'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Checkbox } from './ui/checkbox'
 import { PlusIcon } from '@radix-ui/react-icons'
 import SizePicker from './SizePicker'
@@ -49,17 +43,17 @@ export default function AdminForm() {
   const [color, setColor] = useState([])
   const [article, setArticle] = useState('')
   const [images, setImages] = useState([])
-  const [size, setSize] = useState({
-    xxs: true,
-    xs: true,
-    s: true,
-    m: true,
-    l: true,
-    xl: true,
-    oneSize: false,
-  })
-  const [category, setCategory] = useState('')
   const [stock, setStock] = useState(0)
+  const [size, setSize] = useState([
+    { xxs: true, in_stock: stock },
+    { xs: true, in_stock: stock },
+    { s: true, in_stock: stock },
+    { m: true, in_stock: stock },
+    { l: true, in_stock: stock },
+    { xl: true, in_stock: stock },
+    { oneSize: false, in_stock: stock },
+  ])
+  const [category, setCategory] = useState('')
 
   // utils states
   const [colorInputs, setColorInputs] = useState([0])
@@ -98,22 +92,18 @@ export default function AdminForm() {
   const addImagesInput = () => {
     setImagesInputs([...imagesInputs, imagesInputs.length])
   }
+  console.log(collection)
 
   const validateForm = () => {
     if (!name.length) return setError((prev) => ({ ...prev, name: true }))
     if (!article.length) return setError((prev) => ({ ...prev, article: true }))
-    if (!description.length)
-      return setError((prev) => ({ ...prev, description: true }))
-    if (!material.length)
-      return setError((prev) => ({ ...prev, material: true }))
+    if (!description.length) return setError((prev) => ({ ...prev, description: true }))
+    if (!material.length) return setError((prev) => ({ ...prev, material: true }))
     if (cost == 0) return setError((prev) => ({ ...prev, cost: true }))
-    if (!collection.length)
-      return setError((prev) => ({ ...prev, collection: true }))
-    if (!Object(color).length)
-      return setError((prev) => ({ ...prev, color: true }))
+    if (!collection.length) return setError((prev) => ({ ...prev, collection: true }))
+    if (!Object(color).length) return setError((prev) => ({ ...prev, color: true }))
     if (!images.length) return setError((prev) => ({ ...prev, images: true }))
-    if (!category.length)
-      return setError((prev) => ({ ...prev, category: true }))
+    if (!category.length) return setError((prev) => ({ ...prev, category: true }))
     if (stock == 0) return setError((prev) => ({ ...prev, stock: true }))
     pushData()
   }
@@ -193,6 +183,7 @@ export default function AdminForm() {
         material,
         cost,
         collection,
+        category,
         height,
         gender,
         color,
@@ -222,13 +213,8 @@ export default function AdminForm() {
       {success && <Navigate to="/admin-page/item-form/success" />}
       <div className="rounded-md border shadow-md py-8 px-8 w-full h-full overflow-y-scroll">
         <Toaster />
-        <h1 className="text-xl font-bold mb-6">
-          Заповніть поля, щоб створити нову позицію
-        </h1>
-        <form
-          style={{ gridTemplateColumns: '1.15fr 1fr' }}
-          className="grid grid-flow-col gap-20"
-        >
+        <h1 className="text-xl font-bold mb-6">Заповніть поля, щоб створити нову позицію</h1>
+        <form style={{ gridTemplateColumns: '1.15fr 1fr' }} className="grid grid-flow-col gap-20">
           <div className="leftSide grid gap-4">
             <div className="w-full grid gap-4">
               <FormInput
@@ -249,9 +235,7 @@ export default function AdminForm() {
                 required
                 id="description"
                 className="resize-none"
-                placeholder={
-                  error.description ? 'заповніть поле' : 'опишіть позциію'
-                }
+                placeholder={error.description ? 'заповніть поле' : 'опишіть позциію'}
                 autoComplete="off"
                 onChange={(e) => setDescription(e.target.value)}
                 style={{
@@ -300,9 +284,8 @@ export default function AdminForm() {
                 Додайте посилання на фотографії виробу
               </Label>
               <p>
-                Додайте фотографії у порядку в якому вони мають бути розташовані
-                на сайті. Фотографії додаються для базового кольору виробу, інші
-                кольори виробу додаються як окремий виріб
+                Додайте фотографії у порядку в якому вони мають бути розташовані на сайті. Фотографії додаються для
+                базового кольору виробу, інші кольори виробу додаються як окремий виріб
               </p>
               <div className="grid gap-4">
                 {imagesInputs.map((item) => (
@@ -317,11 +300,7 @@ export default function AdminForm() {
                     setError={setError}
                   />
                 ))}
-                <Button
-                  onClick={() => addImagesInput()}
-                  type="button"
-                  className="bg-slate-100 hover:bg-slate-200"
-                >
+                <Button onClick={() => addImagesInput()} type="button" className="bg-slate-100 hover:bg-slate-200">
                   <PlusIcon className="size-6 text-black" />
                 </Button>
               </div>
@@ -352,12 +331,7 @@ export default function AdminForm() {
                   <Label htmlFor="no" className="text-xs">
                     Ні
                   </Label>
-                  <Checkbox
-                    id="no"
-                    className="size-5"
-                    checked={!height}
-                    onCheckedChange={(e) => setHeight(false)}
-                  />
+                  <Checkbox id="no" className="size-5" checked={!height} onCheckedChange={(e) => setHeight(false)} />
                 </div>
               </div>
             </div>
@@ -405,10 +379,7 @@ export default function AdminForm() {
               <Label htmlFor="color" className="">
                 Виберіть колір чи кольори виробу
               </Label>
-              <p>
-                Введіть назву кольору та колір в палітрі. Ці данні будуть
-                відображатись на сторінці виробу
-              </p>
+              <p>Введіть назву кольору та колір в палітрі. Ці данні будуть відображатись на сторінці виробу</p>
               <div className="grid gap-4">
                 {colorInputs.map((item) => (
                   <ColorPicker
@@ -423,11 +394,7 @@ export default function AdminForm() {
                   />
                 ))}
               </div>
-              <Button
-                onClick={() => addColorInput()}
-                type="button"
-                className="bg-slate-100 hover:bg-slate-200"
-              >
+              <Button onClick={() => addColorInput()} type="button" className="bg-slate-100 hover:bg-slate-200">
                 <PlusIcon className="size-6 text-black" />
               </Button>
             </div>
@@ -447,9 +414,7 @@ export default function AdminForm() {
               <div
                 style={{ outline: error.category ? '2px solid red' : 'none' }}
                 className="rounded-md"
-                onFocus={() =>
-                  setError((prev) => ({ ...prev, category: false }))
-                }
+                onFocus={() => setError((prev) => ({ ...prev, category: false }))}
               >
                 <Select onValueChange={setCategory}>
                   <SelectTrigger>
@@ -466,7 +431,7 @@ export default function AdminForm() {
               </div>
             </div>
             <div className="w-full grid gap-4">
-              <Label htmlFor="collection" className="">
+              <Label htmlFor="d" className="">
                 Виберіть колецію
               </Label>
               <div id="collection">
@@ -475,9 +440,7 @@ export default function AdminForm() {
                   style={{
                     outline: error.collection ? '2px solid red' : 'none',
                   }}
-                  onFocus={() =>
-                    setError((prev) => ({ ...prev, collection: false }))
-                  }
+                  onFocus={() => setError((prev) => ({ ...prev, collection: false }))}
                 >
                   <Select onValueChange={setCollection}>
                     <SelectTrigger>
@@ -486,7 +449,7 @@ export default function AdminForm() {
                     <SelectContent>
                       <SelectItem value="без колеції">без колеції</SelectItem>
                       {collections?.map((item) => (
-                        <SelectItem key={item._id} value={item.name}>
+                        <SelectItem key={item._id} value={item._id}>
                           {item.name}
                         </SelectItem>
                       ))}
@@ -494,9 +457,7 @@ export default function AdminForm() {
                   </Select>
                 </div>
                 <div>
-                  <p className="text-xs mt-4 ml-2 text-slate-800 underline cursor-pointer">
-                    Додати колецію?
-                  </p>
+                  <p className="text-xs mt-4 ml-2 text-slate-800 underline cursor-pointer">Додати колецію?</p>
                 </div>
               </div>
             </div>

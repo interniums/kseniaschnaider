@@ -34,11 +34,7 @@ const ItemSchema = new mongoose.Schema({
   item_collection: {
     type: mongoose.Schema.Types.ObjectId,
     required: false,
-  },
-  collection_name: {
-    type: String,
-    required: true,
-    default: '',
+    ref: 'Collection',
   },
   carry_over: {
     type: Boolean,
@@ -48,11 +44,6 @@ const ItemSchema = new mongoose.Schema({
   category: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-  },
-  categoryName: {
-    type: String,
-    required: true,
-    default: 'no category',
   },
   color: {
     type: [Object],

@@ -32,8 +32,15 @@ const add_new_item = asyncHandler(async (req, res, next) => {
   ) {
     return res.status(400).json({ message: 'Provide all item info.' })
   }
-  const findCollection = await Collection.findOne({ name: collection })
-  const findCategory = await Category.findOne({ _id: category })
+
+  const findCollection = await Collection.findById(collection)
+  if (!findCollection) {
+    return res.status(400).json({ message: 'Invalid collection id' })
+  }
+  const findCategory = await Category.findById(category)
+  if (!findCategory) {
+    return res.status(400).json({ message: 'Invalid category id' })
+  }
 
   const newItem = {
     name,
@@ -41,7 +48,6 @@ const add_new_item = asyncHandler(async (req, res, next) => {
     material,
     cost_uah: cost,
     item_collection: findCollection,
-    collection_name: collection,
     height,
     gender,
     color,
@@ -49,7 +55,6 @@ const add_new_item = asyncHandler(async (req, res, next) => {
     img: images,
     size,
     category: findCategory,
-    categoryName: category,
   }
   const item = await Item.create(newItem)
 
@@ -93,13 +98,13 @@ const edit_item_by_property = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ message: 'Invalid id.' })
   }
 
-  if (property == 'item_collection' || 'item_category') {
-    const collection = await Collection.findOne({ name: value })
-    if (!collection) {
-      return res.status(400).json({ message: 'No collection found' })
-    }
-    value = collection._id
-  }
+  // if (property == 'item_collection' || 'item_category') {
+  //   const collection = await Collection.findOne({ name: value })
+  //   if (!collection) {
+  //     return res.status(400).json({ message: 'No collection found' })
+  //   }
+  //   value = collection._id
+  // }
 
   console.log(property, value)
 

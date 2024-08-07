@@ -17,7 +17,7 @@ export default function SizePicker({ size, setValue }) {
           <Checkbox
             id="xxs"
             className="size-5"
-            checked={size.xxs}
+            checked={size[0].xxs}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
@@ -34,7 +34,7 @@ export default function SizePicker({ size, setValue }) {
             id="xs"
             className="size-5"
             defaultChecked
-            checked={size.xs}
+            checked={size[1].xs}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
@@ -51,7 +51,7 @@ export default function SizePicker({ size, setValue }) {
             id="s"
             className="size-5"
             defaultChecked
-            checked={size.s}
+            checked={size[2].s}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
@@ -68,7 +68,7 @@ export default function SizePicker({ size, setValue }) {
             id="m"
             className="size-5"
             defaultChecked
-            checked={size.m}
+            checked={size[3].m}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
@@ -85,7 +85,7 @@ export default function SizePicker({ size, setValue }) {
             id="l"
             className="size-5"
             defaultChecked
-            checked={size.l}
+            checked={size[4].l}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
@@ -102,7 +102,7 @@ export default function SizePicker({ size, setValue }) {
             id="xl"
             className="size-5"
             defaultChecked
-            checked={size.xl}
+            checked={size[5].xl}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
@@ -119,7 +119,7 @@ export default function SizePicker({ size, setValue }) {
             id="one size"
             className="size-5"
             defaultChecked
-            checked={size.oneSize}
+            checked={size[6].oneSize}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,

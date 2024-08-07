@@ -45,7 +45,7 @@ export default function AdminItem() {
             ))}
           </div>
           <div className="grid gap-6 mt-10">
-            <ItemInfoComponent
+            {/* <ItemInfoComponent
               item={item}
               value={item.item.name}
               name={'name'}
@@ -72,12 +72,13 @@ export default function AdminItem() {
               name={'cost_uah'}
               updateData={updateData}
               setUpdateData={setUpdateData}
-            />
+            /> */}
             <ItemInfoComponent
               item={item}
               value={item.item.item_collection}
               name={'item_collection'}
               variant="select-col"
+              id={userId}
             />
             <div>
               <Label>Category</Label>
