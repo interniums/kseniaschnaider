@@ -26,4 +26,19 @@ const get_collections = asyncHandler(async (req, res, next) => {
   }
 })
 
-module.exports = { add_collection, get_collections }
+const get_collection = asyncHandler(async (req, res, next) => {
+  const id = req.params
+  if (!id) {
+    return res.status(400)
+  }
+  console.log(id.id)
+
+  const collection = await Collection.findById(id.id)
+
+  if (!collection) {
+    res.status(404)
+  }
+  res.status(200).json(collection)
+})
+
+module.exports = { add_collection, get_collections, get_collection }

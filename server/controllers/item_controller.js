@@ -12,8 +12,7 @@ const get_all_items = asyncHandler(async (req, res, next) => {
 })
 
 const add_new_item = asyncHandler(async (req, res, next) => {
-  const { name, description, material, cost, collection, height, gender, color, article, images, size, category } =
-    req.body
+  const { name, description, material, collection, height, gender, color, article, images, size, category } = req.body
 
   console.log(req.body)
 
@@ -21,7 +20,6 @@ const add_new_item = asyncHandler(async (req, res, next) => {
     !name ||
     !description ||
     !material ||
-    !cost ||
     !collection ||
     !gender ||
     !color ||
@@ -66,7 +64,7 @@ const add_new_item = asyncHandler(async (req, res, next) => {
 })
 
 const edit_item = asyncHandler(async (req, res, next) => {
-  let { _id, sale, discount, active, hide, hideSale, carryOver, hideCarryOver, name } = req.body
+  let { _id, sale, discount, active, hide, hideSale, carryOver, hideCarryOver } = req.body
   console.log(req.body)
 
   !active ? (active = true) : null
@@ -97,14 +95,6 @@ const edit_item_by_property = asyncHandler(async (req, res, next) => {
   if (!_id) {
     return res.status(400).json({ message: 'Invalid id.' })
   }
-
-  // if (property == 'item_collection' || 'item_category') {
-  //   const collection = await Collection.findOne({ name: value })
-  //   if (!collection) {
-  //     return res.status(400).json({ message: 'No collection found' })
-  //   }
-  //   value = collection._id
-  // }
 
   console.log(property, value)
 

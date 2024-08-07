@@ -17,11 +17,14 @@ export default function SizePicker({ size, setValue }) {
           <Checkbox
             id="xxs"
             className="size-5"
-            checked={size[0].xxs}
+            checked={size.xxs.available}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
-                xxs: !size.xxs,
+                xxs: {
+                  ...prev.xxs,
+                  available: !available,
+                },
               }))
             }}
           />
@@ -34,11 +37,14 @@ export default function SizePicker({ size, setValue }) {
             id="xs"
             className="size-5"
             defaultChecked
-            checked={size[1].xs}
+            checked={size.xs.available}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
-                xs: !size.xs,
+                xs: {
+                  ...prev.xs,
+                  available: !available,
+                },
               }))
             }}
           />
@@ -51,11 +57,14 @@ export default function SizePicker({ size, setValue }) {
             id="s"
             className="size-5"
             defaultChecked
-            checked={size[2].s}
+            checked={size.xs.available}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
-                s: !size.s,
+                s: {
+                  ...prev.s,
+                  available: !available,
+                },
               }))
             }}
           />
@@ -68,11 +77,14 @@ export default function SizePicker({ size, setValue }) {
             id="m"
             className="size-5"
             defaultChecked
-            checked={size[3].m}
+            checked={size.m.available}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
-                m: !size.m,
+                m: {
+                  ...prev.m,
+                  available: !available,
+                },
               }))
             }}
           />
@@ -85,11 +97,14 @@ export default function SizePicker({ size, setValue }) {
             id="l"
             className="size-5"
             defaultChecked
-            checked={size[4].l}
+            checked={size.l.available}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
-                l: !size.l,
+                l: {
+                  ...prev.l,
+                  available: !available,
+                },
               }))
             }}
           />
@@ -102,11 +117,14 @@ export default function SizePicker({ size, setValue }) {
             id="xl"
             className="size-5"
             defaultChecked
-            checked={size[5].xl}
+            checked={size.xl.available}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
-                xl: !size.xl,
+                xl: {
+                  ...prev.xl,
+                  available: !available,
+                },
               }))
             }}
           />
@@ -119,11 +137,14 @@ export default function SizePicker({ size, setValue }) {
             id="one size"
             className="size-5"
             defaultChecked
-            checked={size[6].oneSize}
+            checked={size.oneSize.available}
             onCheckedChange={() => {
               setValue((prev) => ({
                 ...prev,
-                oneSize: !size.oneSize,
+                oneSize: {
+                  ...prev.oneSize,
+                  available: !available,
+                },
               }))
             }}
           />

@@ -25,8 +25,6 @@ export default function AdminItem() {
     get_item()
   }, [updateData])
 
-  console.log(item)
-
   return (
     <main className="absolute inset-0 pt-20 pl-28 z-0 min-h-screen overflow-y-clip">
       {loading ? (
@@ -74,11 +72,13 @@ export default function AdminItem() {
               setUpdateData={setUpdateData}
             /> */}
             <ItemInfoComponent
-              item={item}
+              item={item.item}
               value={item.item.item_collection}
               name={'item_collection'}
               variant="select-col"
               id={userId}
+              updateData={updateData}
+              setUpdateData={setUpdateData}
             />
             <div>
               <Label>Category</Label>

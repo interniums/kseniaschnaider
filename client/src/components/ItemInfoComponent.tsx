@@ -16,20 +16,26 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
   const { toast } = useToast()
   const [edit, setEdit] = useState(false)
   const [itemValue, setItemValue] = useState(value)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
   const [item_collection, setItemCollection] = useState([])
   const [categories, setCategories] = useState([])
+  const [collectionName, setCollectionName] = useState('')
 
-  // console.log(itemValue, name)
-  console.log(item_collection)
+  const getCollection = async () => {
+    setLoading(true)
+    axios.get(`http://localhost:3000/collection/${item.item_collection}`).then((response) => {
+      setCollectionName(response.data.name)
+      setLoading(false)
+    })
+  }
 
   const pushChange = () => {
     setLoading(true)
     let res
     axios
-      .patch(`http://localhost:3000/item/edit/${item.item._id}`, {
+      .patch(`http://localhost:3000/item/edit/${item._id}`, {
         [name]: itemValue,
       })
       .then((response) => {
@@ -40,7 +46,6 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
         }
         console.log(response.data)
         setError(false)
-        setLoading(false)
         setSuccess(true)
         setEdit(false)
         setUpdateData(!updateData)
@@ -58,17 +63,19 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
   }, [success])
 
   useEffect(() => {
+    setLoading(true)
     const getData = async () => {
       name == 'item_collection' ? setItemCollection(await getCollections()) : null
       name == 'category' ? setCategories(await getCategories()) : null
     }
     getData()
-  }, [])
+    getCollection()
+  }, [success, item])
 
   return (
     <div className="w-full flex items-center justify-center">
       {success && <Toaster />}
-      <Accordion type="single" collapsible className="w-1/2">
+      <Accordion collapsible className="w-1/2">
         <AccordionItem value={value}>
           <AccordionTrigger>{name.toUpperCase()}</AccordionTrigger>
           <AccordionContent className="flex items-center justify-between">
@@ -76,9 +83,7 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
               <>
                 {!edit ? (
                   <>
-                    <p className="text-md">
-                      {variant == 'select-col' ? item.item.collection_name : item.item.category_name}
-                    </p>
+                    <p className="text-md">{variant == 'select-col' ? collectionName : item.item.category_name}</p>
                     <Button
                       variant={'outline'}
                       className="py-2 px-14"
@@ -92,11 +97,9 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
                   </>
                 ) : (
                   <div className="w-full flex gap-16 py-2 px-4">
-                    <Select className="w-full" onValueChange={setItemValue}>
+                    <Select disabled={loading ? true : false} className="w-full" onValueChange={setItemValue}>
                       <SelectTrigger className="w-full">
-                        <SelectValue
-                          placeholder={variant == 'select-col' ? item.item.collection_name : item.item.category_name}
-                        />
+                        <SelectValue placeholder={variant == 'select-col' ? collectionName : item.item.category_name} />
                       </SelectTrigger>
                       <SelectContent className="w-full">
                         <SelectGroup className="w-full">

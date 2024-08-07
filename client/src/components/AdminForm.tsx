@@ -44,15 +44,15 @@ export default function AdminForm() {
   const [article, setArticle] = useState('')
   const [images, setImages] = useState([])
   const [stock, setStock] = useState(0)
-  const [size, setSize] = useState([
-    { xxs: true, in_stock: stock },
-    { xs: true, in_stock: stock },
-    { s: true, in_stock: stock },
-    { m: true, in_stock: stock },
-    { l: true, in_stock: stock },
-    { xl: true, in_stock: stock },
-    { oneSize: false, in_stock: stock },
-  ])
+  const [size, setSize] = useState({
+    xxs: { available: true },
+    xs: { available: true },
+    s: { available: true },
+    m: { available: true },
+    l: { available: true },
+    xl: { available: true },
+    oneSize: { available: false },
+  })
   const [category, setCategory] = useState('')
 
   // utils states
@@ -70,6 +70,17 @@ export default function AdminForm() {
     category: false,
     stock: false,
   })
+
+  useEffect(() => {
+    const updatedSizes = Object.keys(size).reduce((acc, key) => {
+      acc[key] = {
+        ...size[key],
+        in_stock: size[key].available ? stock : 0,
+      }
+      return acc
+    }, {})
+    setSize(updatedSizes)
+  }, [stock])
 
   useEffect(() => {
     const get_cat = async () => {
@@ -92,7 +103,6 @@ export default function AdminForm() {
   const addImagesInput = () => {
     setImagesInputs([...imagesInputs, imagesInputs.length])
   }
-  console.log(collection)
 
   const validateForm = () => {
     if (!name.length) return setError((prev) => ({ ...prev, name: true }))
