@@ -13,44 +13,53 @@ import AdminCategory from './components/AdminCategory'
 import path from 'path'
 import AdminItems from './components/AdminItems'
 import AdminItem from './components/AdminItem'
+import ErrorComponent from './components/ErrorComponent'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
+    errorElement: <ErrorComponent />,
   },
   {
     path: '/admin-page',
     element: <AdminPage />,
+    errorElement: <ErrorComponent />,
     children: [
       {
         path: '/admin-page',
         element: <AdminHome />,
+        errorElement: <ErrorComponent />,
       },
       {
         path: '/admin-page/item-form',
         element: <AdminForm />,
+        errorElement: <ErrorComponent />,
       },
       {
         path: '/admin-page/item-form/success',
         element: <ItemSuccess />,
+        errorElement: <ErrorComponent />,
       },
       {
         path: '/admin-page/item',
         element: <AdminItems />,
-        // children: [{ path: '/admin-page/item/:id', element: <AdminItem /> }],
+        errorElement: <ErrorComponent />,
       },
       {
         path: '/admin-page/item/:id',
         element: <AdminItem />,
+        errorElement: <ErrorComponent />,
       },
       {
         path: '/admin-page/collection/:id',
         element: <AdminCollection />,
+        errorElement: <ErrorComponent />,
       },
       {
         path: '/admin-page/category/:id',
         element: <AdminCategory />,
+        errorElement: <ErrorComponent />,
       },
     ],
   },

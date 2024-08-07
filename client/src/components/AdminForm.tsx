@@ -218,9 +218,9 @@ export default function AdminForm() {
   }
 
   return (
-    <main className="abosulute inset-0 py-28 px-60 flex w-full min-h-screen overflow-y-clip justify-center items-center">
+    <main className="absolute overflow-hidden inset-0 py-28 px-60 flex w-full max-h-screen justify-center items-center">
       {success && <Navigate to="/admin-page/item-form/success" />}
-      <div className="w-full rounded-md border shadow-md py-8 px-8 overflow-y-scroll h-full">
+      <div className="rounded-md border shadow-md py-8 px-8 w-full h-full overflow-y-scroll">
         <Toaster />
         <h1 className="text-xl font-bold mb-6">
           Заповніть поля, щоб створити нову позицію
@@ -294,41 +294,6 @@ export default function AdminForm() {
                 error={error}
                 setError={setError}
               />
-            </div>
-            <div className="w-full grid gap-4">
-              <Label htmlFor="collection" className="">
-                Виберіть колецію
-              </Label>
-              <div id="collection">
-                <div
-                  className="rounded-md"
-                  style={{
-                    outline: error.collection ? '2px solid red' : 'none',
-                  }}
-                  onFocus={() =>
-                    setError((prev) => ({ ...prev, collection: false }))
-                  }
-                >
-                  <Select onValueChange={setCollection}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="виберіть колецію" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="без колеції">без колеції</SelectItem>
-                      {collections?.map((item) => (
-                        <SelectItem key={item._id} value={item.name}>
-                          {item.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <p className="text-xs mt-4 ml-2 text-slate-800 underline cursor-pointer">
-                    Додати колецію?
-                  </p>
-                </div>
-              </div>
             </div>
             <div className="w-full grid gap-4">
               <Label className="" htmlFor="images">
@@ -500,12 +465,47 @@ export default function AdminForm() {
                 </Select>
               </div>
             </div>
+            <div className="w-full grid gap-4">
+              <Label htmlFor="collection" className="">
+                Виберіть колецію
+              </Label>
+              <div id="collection">
+                <div
+                  className="rounded-md"
+                  style={{
+                    outline: error.collection ? '2px solid red' : 'none',
+                  }}
+                  onFocus={() =>
+                    setError((prev) => ({ ...prev, collection: false }))
+                  }
+                >
+                  <Select onValueChange={setCollection}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="виберіть колецію" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="без колеції">без колеції</SelectItem>
+                      {collections?.map((item) => (
+                        <SelectItem key={item._id} value={item.name}>
+                          {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <p className="text-xs mt-4 ml-2 text-slate-800 underline cursor-pointer">
+                    Додати колецію?
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </form>
         <div className="w-full flex items-center justify-end mt-12">
           <Button
             type="button"
-            className="bg-slate-200 text-black py-6 px-8 text-xl hover:bg-slate-300 font-bold w-full"
+            className="bg-slate-200 text-black py-6 px-8 text-xl hover:bg-slate-300 w-full"
             onClick={validateForm}
           >
             SUBMIT

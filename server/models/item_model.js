@@ -45,6 +45,15 @@ const ItemSchema = new mongoose.Schema({
     default: false,
     required: false,
   },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
+  categoryName: {
+    type: String,
+    required: true,
+    default: 'no category',
+  },
   color: {
     type: [Object],
     required: true,

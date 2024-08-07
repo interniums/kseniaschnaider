@@ -30,3 +30,11 @@ export const getItems = async () => {
   })
   return res
 }
+
+export const getItem = async (_id) => {
+  let res
+  await axios.get(`http://localhost:3000/item/get/${_id}`).then((response) => {
+    res = response.data
+  })
+  return res
+}

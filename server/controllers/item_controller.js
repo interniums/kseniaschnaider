@@ -1,5 +1,6 @@
 const Item = require('../models/item_model')
 const Collection = require('../models/collection_model')
+const Category = require('../models/category_model')
 const asyncHandler = require('express-async-handler')
 
 const get_all_items = asyncHandler(async (req, res, next) => {
@@ -11,19 +12,8 @@ const get_all_items = asyncHandler(async (req, res, next) => {
 })
 
 const add_new_item = asyncHandler(async (req, res, next) => {
-  const {
-    name,
-    description,
-    material,
-    cost,
-    collection,
-    height,
-    gender,
-    color,
-    article,
-    images,
-    size,
-  } = req.body
+  const { name, description, material, cost, collection, height, gender, color, article, images, size, category } =
+    req.body
 
   console.log(req.body)
 
@@ -37,11 +27,13 @@ const add_new_item = asyncHandler(async (req, res, next) => {
     !color ||
     !article ||
     !images ||
+    !category ||
     !size
   ) {
     return res.status(400).json({ message: 'Provide all item info.' })
   }
   const findCollection = await Collection.findOne({ name: collection })
+  const findCategory = await Category.findOne({ _id: category })
 
   const newItem = {
     name,
@@ -56,6 +48,8 @@ const add_new_item = asyncHandler(async (req, res, next) => {
     article,
     img: images,
     size,
+    category: findCategory,
+    categoryName: category,
   }
   const item = await Item.create(newItem)
 
@@ -67,11 +61,13 @@ const add_new_item = asyncHandler(async (req, res, next) => {
 })
 
 const edit_item = asyncHandler(async (req, res, next) => {
-  let { _id, sale, discount, active, hide } = req.body
+  let { _id, sale, discount, active, hide, hideSale, carryOver, hideCarryOver, name } = req.body
   console.log(req.body)
 
   !active ? (active = true) : null
   hide ? (active = false) : null
+  hideSale ? (sale = false) : null
+  hideCarryOver ? (carryOver = false) : null
 
   if (!_id) {
     return res.status(400).json({ message: 'Invalid data.' })
@@ -79,7 +75,7 @@ const edit_item = asyncHandler(async (req, res, next) => {
 
   const findAndUpdate = await Item.updateMany(
     { _id: { $in: _id } },
-    { $set: { active: active, sale: sale, discount: discount } }
+    { $set: { active: active, sale: sale, discount: discount, carry_over: carryOver } }
   )
 
   if (findAndUpdate) {
@@ -89,4 +85,47 @@ const edit_item = asyncHandler(async (req, res, next) => {
   }
 })
 
-module.exports = { get_all_items, add_new_item, edit_item }
+const edit_item_by_property = asyncHandler(async (req, res, next) => {
+  const _id = req.params
+  const property = Object.keys(req.body)[0]
+  let value = req.body[Object.keys(req.body)[0]]
+  if (!_id) {
+    return res.status(400).json({ message: 'Invalid id.' })
+  }
+
+  if (property == 'item_collection' || 'item_category') {
+    const collection = await Collection.findOne({ name: value })
+    if (!collection) {
+      return res.status(400).json({ message: 'No collection found' })
+    }
+    value = collection._id
+  }
+
+  console.log(property, value)
+
+  const item = await Item.findByIdAndUpdate(_id.id, {
+    [property]: value,
+  })
+  if (!item) {
+    return res.status(400).json({ message: 'Item not found.' })
+  }
+  res.status(200).json({ message: 'Success' })
+})
+
+const get_item = asyncHandler(async (req, res, next) => {
+  const _id = req.params
+
+  if (!_id) {
+    return res.status(400).json({ message: 'Invalid id.' })
+  }
+
+  const item = await Item.findById(_id.id)
+
+  if (!item) {
+    res.status(404).json({ message: 'User not found.' })
+  } else {
+    res.status(200).json({ item })
+  }
+})
+
+module.exports = { get_all_items, add_new_item, edit_item, get_item, edit_item_by_property }
