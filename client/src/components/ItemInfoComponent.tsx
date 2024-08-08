@@ -12,7 +12,7 @@ import { Toaster } from './ui/toaster'
 import { getCategories, getCollections } from '@/lib/utils'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 
-export default function ItemInfoComponent({ item, value, name, updateData, setUpdateData, variant, id }) {
+export default function ItemInfoComponent({ item, value, name, updateData, setUpdateData, variant, id, type }) {
   const { toast } = useToast()
   const [edit, setEdit] = useState(false)
   const [itemValue, setItemValue] = useState(value)
@@ -22,6 +22,7 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
   const [item_collection, setItemCollection] = useState([])
   const [categories, setCategories] = useState([])
   const [collectionName, setCollectionName] = useState('')
+  const [categoryName, setCategoryName] = useState('')
 
   const getCollection = async () => {
     setLoading(true)
@@ -31,11 +32,19 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
     })
   }
 
+  const getCategory = async () => {
+    setLoading(true)
+    axios.get(`http://localhost:3000/category/${item.category}`).then((response) => {
+      setCategoryName(response.data)
+      setLoading(false)
+    })
+  }
+
   const pushChange = () => {
     setLoading(true)
     let res
     axios
-      .patch(`http://localhost:3000/item/edit/${item._id}`, {
+      .patch(`http://localhost:3000/item/edit/${item?._id}`, {
         [name]: itemValue,
       })
       .then((response) => {
@@ -51,6 +60,8 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
         setUpdateData(!updateData)
       })
   }
+
+  console.log(categories)
 
   useEffect(() => {
     const addToast = () => {
@@ -69,7 +80,12 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
       name == 'category' ? setCategories(await getCategories()) : null
     }
     getData()
-    getCollection()
+    if (variant == 'select-cat' || variant == 'select-col') {
+      getCollection()
+      getCategory()
+    } else {
+      setLoading(false)
+    }
   }, [success, item])
 
   return (
@@ -83,7 +99,9 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
               <>
                 {!edit ? (
                   <>
-                    <p className="text-md">{variant == 'select-col' ? collectionName : item.item.category_name}</p>
+                    <p className="text-lg">
+                      {variant == 'select-col' ? collectionName : categoryName.name + ' - ' + categoryName.gender}
+                    </p>
                     <Button
                       variant={'outline'}
                       className="py-2 px-14"
@@ -99,29 +117,27 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
                   <div className="w-full flex gap-16 py-2 px-4">
                     <Select disabled={loading ? true : false} className="w-full" onValueChange={setItemValue}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder={variant == 'select-col' ? collectionName : item.item.category_name} />
+                        <SelectValue placeholder={variant == 'select-col' ? collectionName : categoryName} />
                       </SelectTrigger>
                       <SelectContent className="w-full">
                         <SelectGroup className="w-full">
                           <SelectItem value="без колеції">без колеції</SelectItem>
                           {variant == 'select-col'
-                            ? item_collection.map((item, i) => (
-                                <SelectItem key={i} value={item._id}>
-                                  {item.name}
+                            ? item_collection.map((collection, i) => (
+                                <SelectItem key={i} value={collection._id}>
+                                  {collection.name}
                                 </SelectItem>
                               ))
-                            : categories.map((item) => (
-                                <SelectItem
-                                  key={item}
-                                  value="item"
-                                  onSelect={(currentValue) => {
-                                    setItemValue(currentValue === value ? '' : currentValue)
-                                    setOpen(false)
-                                  }}
-                                >
-                                  {item}
+                            : null}
+                        </SelectGroup>
+                        <SelectGroup>
+                          {variant == 'select-cat'
+                            ? categories.map((category, i) => (
+                                <SelectItem key={i} value={category._id}>
+                                  {category.name}
                                 </SelectItem>
-                              ))}
+                              ))
+                            : null}
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -140,7 +156,7 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
               <>
                 {!edit ? (
                   <>
-                    <p className="text-md">{itemValue}</p>
+                    <p className="text-lg">{itemValue}</p>
                     <Button
                       variant={'outline'}
                       className="py-2 px-14"
@@ -160,6 +176,7 @@ export default function ItemInfoComponent({ item, value, name, updateData, setUp
                       onChange={(e) => setItemValue(e.target.value)}
                       className="w-2/3"
                       disabled={loading ? true : false}
+                      type={type == 'number' ? 'number' : 'text'}
                     />
                     <Button
                       className="w-28"

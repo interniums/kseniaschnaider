@@ -97,6 +97,7 @@ const edit_item_by_property = asyncHandler(async (req, res, next) => {
   }
 
   console.log(property, value)
+  console.log(_id)
 
   const item = await Item.findByIdAndUpdate(_id.id, {
     [property]: value,

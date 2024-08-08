@@ -25,4 +25,19 @@ const get_categories = asyncHandler(async (req, res, next) => {
   }
 })
 
-module.exports = { add_category, get_categories }
+const get_category = asyncHandler(async (req, res, next) => {
+  const id = req.params
+  if (!id) {
+    return res.status(400)
+  }
+  console.log(id.id)
+
+  const category = await Category.findById(id.id)
+
+  if (!category) {
+    res.status(404)
+  }
+  res.status(200).json(category)
+})
+
+module.exports = { add_category, get_categories, get_category }

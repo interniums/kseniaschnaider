@@ -17,7 +17,7 @@ const ItemSchema = new mongoose.Schema({
     required: true,
   },
   cost_uah: {
-    type: Number,
+    type: String,
     required: true,
     default: 0,
   },
