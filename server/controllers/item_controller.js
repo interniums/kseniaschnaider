@@ -64,13 +64,8 @@ const add_new_item = asyncHandler(async (req, res, next) => {
 })
 
 const edit_item = asyncHandler(async (req, res, next) => {
-  let { _id, sale, discount, active, hide, hideSale, carryOver, hideCarryOver } = req.body
+  let { _id, discount, active, carryOver } = req.body
   console.log(req.body)
-
-  !active ? (active = true) : null
-  hide ? (active = false) : null
-  hideSale ? (sale = false) : null
-  hideCarryOver ? (carryOver = false) : null
 
   if (!_id) {
     return res.status(400).json({ message: 'Invalid data.' })
@@ -78,7 +73,7 @@ const edit_item = asyncHandler(async (req, res, next) => {
 
   const findAndUpdate = await Item.updateMany(
     { _id: { $in: _id } },
-    { $set: { active: active, sale: sale, discount: discount, carry_over: carryOver } }
+    { $set: { active: active, discount: discount, carry_over: carryOver } }
   )
 
   if (findAndUpdate) {

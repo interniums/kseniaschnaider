@@ -3,8 +3,24 @@
 import { useEffect, useState } from 'react'
 import { Checkbox } from './ui/checkbox'
 import { TableCell, TableRow } from './ui/table'
+import { getCollections } from '@/lib/utils'
 
 export default function AdminTable({ item, nav, allChecked, checkedPositions, setCheckedPositions, setAllChecked }) {
+  const [collections, setCollections] = useState([])
+  const [collectionName, setCollectionName] = useState('')
+
+  useEffect(() => {
+    const getData = async () => {
+      setCollections(await getCollections())
+    }
+    getData()
+  }, [])
+
+  useEffect(() => {
+    const collection = collections.find((x) => x._id === item.item_collection)
+    setCollectionName(collection?.name)
+  }, [collections])
+
   return (
     <TableRow
       onClick={() => nav(item._id)}
@@ -22,11 +38,8 @@ export default function AdminTable({ item, nav, allChecked, checkedPositions, se
         />
       </TableCell>
       <TableCell>{item.name}</TableCell>
-      <TableCell>{item.collection_name}</TableCell>
+      <TableCell>{collectionName}</TableCell>
       <TableCell className="font-bold">{item.cost_uah} UAH</TableCell>
-      <TableCell className={!item.sale ? 'bg-red-200 font-bold text-center' : 'bg-green-200 font-bold text-center'}>
-        {!item.sale ? 'false' : 'true'}
-      </TableCell>
       <TableCell className={!item.active ? 'bg-red-200 font-bold text-center' : 'bg-green-200 font-bold text-center'}>
         {!item.active ? 'false' : 'true'}
       </TableCell>

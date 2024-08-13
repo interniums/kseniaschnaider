@@ -19,16 +19,16 @@ const ItemSchema = new mongoose.Schema({
   cost_uah: {
     type: String,
     required: true,
-    default: 0,
+    default: '0',
   },
   cost_eur: {
-    type: Number,
+    type: String,
     required: true,
-    default: 0,
+    default: '0',
   },
   discount: {
-    type: Number,
-    default: 0,
+    type: String,
+    default: '0',
     required: true,
   },
   item_collection: {
@@ -75,10 +75,11 @@ const ItemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  sale: {
-    type: Boolean,
-    default: false,
+  sale_name: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
+    default: 'none',
+    ref: 'Sale',
   },
   description: {
     type: String,

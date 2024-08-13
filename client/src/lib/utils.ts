@@ -23,6 +23,14 @@ export const getCollections = async () => {
   return res
 }
 
+export const getSales = async () => {
+  let res
+  await axios.get('http://localhost:3000/sale').then((response) => {
+    res = response.data
+  })
+  return res
+}
+
 export const getItems = async () => {
   let res
   await axios.get('http://localhost:3000/item').then((response) => {

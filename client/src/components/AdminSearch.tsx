@@ -98,9 +98,9 @@ export default function AdminSearch() {
   return (
     <>
       <header className="w-full flex items-center justify-center pt-4 absolute z-10">
-        <div className="w-1/3">
+        <div className="w-1/3 ml-24">
           {loading ? (
-            <div className="text-center">loading...</div>
+            <div className="text-center"></div>
           ) : (
             <>
               <div className="relative flex items-center" onFocus={() => setOpen(true)} ref={dropDownRef}>

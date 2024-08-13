@@ -26,18 +26,13 @@ export default function AdminItems() {
   const [checkedPositions, setCheckedPositions] = useState([])
   const [filtered, setFiltered] = useState([])
 
-  const [sale, setSale] = useState(false)
-  const [hideSale, setHideSale] = useState(false)
-  const [active, setActive] = useState(false)
-  const [hide, setHide] = useState(false)
+  const [active, setActive] = useState(true)
   const [discount, setDiscount] = useState(0)
-  const [carryOver, setCarryOver] = useState(false)
-  const [hideCarryOver, setHideCarryOver] = useState(false)
+  const [carryOver, setCarryOver] = useState(true)
 
   const [alphabetical, setAlphabetical] = useState(true)
   const [costical, setCostical] = useState(true)
   const [activical, setActivical] = useState(true)
-  const [salycal, setSalycal] = useState(true)
   const [carrycal, setCarrycal] = useState(true)
 
   useEffect(() => {
@@ -61,13 +56,9 @@ export default function AdminItems() {
     axios
       .patch('http://localhost:3000/item/edit', {
         _id: checkedPositions,
-        sale,
-        hideSale,
         active,
         discount,
-        hide,
         carryOver,
-        hideCarryOver,
       })
       .then((response) => {
         console.log(response.status)
@@ -95,10 +86,6 @@ export default function AdminItems() {
 
   const activeSort = () => {
     activical ? items.sort((a, b) => a.active - b.active) : items.sort((a, b) => b.active - a.active)
-  }
-
-  const saleSort = () => {
-    salycal ? items.sort((a, b) => a.sale - b.sale) : items.sort((a, b) => b.sale - a.sale)
   }
 
   const carrySort = () => {
@@ -160,57 +147,19 @@ export default function AdminItems() {
                           <div className="grid grid-cols-2 gap-6">
                             <div className="flex gap-2 items-center">
                               <Checkbox
-                                className="size-6"
-                                onCheckedChange={() => setSale(!sale)}
-                                checked={sale}
-                                disabled={hideSale ? true : false}
-                              />
-                              <Label>Додати до розпродажу</Label>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                              <Checkbox
-                                className="size-6"
-                                onCheckedChange={() => setHideSale(!hideSale)}
-                                checked={hideSale}
-                                disabled={sale ? true : false}
-                              />
-                              <Label>Видалити з розпродажу</Label>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                              <Checkbox
-                                checked={hide}
-                                onCheckedChange={() => setHide(!hide)}
-                                className="size-6"
-                                disabled={active ? true : false}
-                              />
-                              <Label>Приховати позицію</Label>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                              <Checkbox
                                 checked={active}
                                 onCheckedChange={() => setActive(!active)}
                                 className="size-6"
-                                disabled={hide ? true : false}
                               />
-                              <Label>Відновити позицію</Label>
+                              <Label>Active</Label>
                             </div>
                             <div className="flex gap-2 items-center">
                               <Checkbox
                                 checked={carryOver}
                                 onCheckedChange={() => setCarryOver(!carryOver)}
                                 className="size-6"
-                                disabled={hideCarryOver ? true : false}
                               />
-                              <Label>Додати до керіовер</Label>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                              <Checkbox
-                                checked={hideCarryOver}
-                                onCheckedChange={() => setHideCarryOver(!hideCarryOver)}
-                                className="size-6"
-                                disabled={carryOver ? true : false}
-                              />
-                              <Label>Видалити з керіовер</Label>
+                              <Label>Carry over</Label>
                             </div>
                           </div>
                           <div className="flex gap-4 items-end justify-start">
@@ -286,15 +235,6 @@ export default function AdminItems() {
                         }}
                       >
                         Price
-                      </TableHead>
-                      <TableHead
-                        className="cursor-pointer hover:underline"
-                        onClick={() => {
-                          setSalycal(!salycal)
-                          saleSort()
-                        }}
-                      >
-                        Sale
                       </TableHead>
                       <TableHead
                         className="cursor-pointer hover:underline"

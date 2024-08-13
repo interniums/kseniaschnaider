@@ -11,6 +11,7 @@ var indexRouter = require('./routes/index')
 var item_router = require('./routes/item_routes')
 var collection_router = require('./routes/collection_routes')
 var category_router = require('./routes/category_routes')
+var sale_router = require('./routes/sale_routes')
 
 var app = express()
 connectDB()
@@ -30,6 +31,7 @@ app.use('/', indexRouter)
 app.use('/item', item_router)
 app.use('/collection', collection_router)
 app.use('/category', category_router)
+app.use('/sale', sale_router)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
